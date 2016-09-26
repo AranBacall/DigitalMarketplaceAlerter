@@ -1,0 +1,22 @@
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8080
+  registerDefaultExceptionMappers: false
+
+database:
+  driverClass: "org.h2.Driver"
+  url: "jdbc:h2:./database/digitalmarketplacealerter-db"
+
+sessionCookieName: DIGITALMARKETPLACEALERTER_SESSION
+
+email:
+  from: no_reply@your-domain-here.com
+  adminName: Your Name
+  adminEmail: your-email-address@your-domain-here.com
+  host: localhost
+  port: 25
+  enabled: false
