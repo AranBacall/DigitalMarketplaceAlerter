@@ -70,6 +70,13 @@ The software won't return to the command line - you can use ```CTRL-C``` to term
 follow the link to log in to view the list of opportunities this software has seen, and the list of people to alert when
 new opportunities are detected.
 
+The regex from the alert is matched against the opportunity's customer, and if it matches an email is sent. To 
+match all alerts, use a regex of ```.*```. You can temporarily disable alerts, or delete them completely from the
+list of alerts.
+
+In the Opportunities view, you can "unalert" an opportunity. It will then be picked up for notifications on the
+next sweep (10 seconds) and emails alerts generated. This works well if you had an email outage.
+
 ### Diagnostics
 
 This app uses an embedded [H2 database](http://www.h2database.com/). You can view the contents
@@ -78,6 +85,12 @@ of the database with the following:-
 ```
 $ java -jar ~/.m2/repository/com/h2database/h2/1.4.192/h2-1.4.192.jar
 ```
+
+The Digital Markeplace website is processed every 30 minutes.
+
+Alerts monitor the database every 10 seconds for any new opportunities which have not been 
+marked as alerted, and generates emails based on these.
+
 
 The application is a [Dropwizard](http://www.dropwizard.io) application.
 
