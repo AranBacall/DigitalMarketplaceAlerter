@@ -30,7 +30,7 @@ public class EmailAlerter {
         this.htmlEmailBodyFactory = htmlEmailBodyFactory;
         this.textEmailBodyFactory = textEmailBodyFactory;
         this.enabled = enabled;
-        htmlEmail = new HtmlEmail();
+        htmlEmail = null;
     }
 
     // Unit test constructor
@@ -50,11 +50,18 @@ public class EmailAlerter {
         this.htmlEmail = htmlEmail;
     }
 
+    private HtmlEmail getHtmlEmail() {
+        if (htmlEmail != null) {
+            return htmlEmail;
+        }
+        return new HtmlEmail();
+    }
+
     public boolean alert(Opportunity o, List<Alert> alerts) {
         boolean result = false;
 
         try {
-            HtmlEmail email = htmlEmail;
+            HtmlEmail email = getHtmlEmail();
             email.setHostName(host);
             email.setSmtpPort(port);
             email.setFrom(from);
