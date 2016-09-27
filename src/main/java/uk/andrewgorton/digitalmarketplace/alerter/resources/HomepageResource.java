@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 @Path("/")
 public class HomepageResource {
@@ -23,6 +24,12 @@ public class HomepageResource {
     @Timed
     @LoginRequired
     public Object getDefault(@Context UriInfo uriInfo) throws Exception {
-        return new HomeView(uriInfo.getBaseUriBuilder().path(SecurityResource.class).path("/logout").build());
+        URI logoutLocation = uriInfo
+                .getBaseUriBuilder()
+                .path(SecurityResource.class)
+                .path("/logout")
+                .scheme(null)
+                .build();
+        return new HomeView(logoutLocation);
     }
 }
