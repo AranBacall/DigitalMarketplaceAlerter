@@ -1,6 +1,6 @@
 # Digital Marketplace Alerter
 
-[![Build Status](https://travis-ci.org/AndrewGorton/DigitalMarketplaceAlerting.svg?branch=master)](https://travis-ci.org/AndrewGorton/DigitalMarketplaceAlerting)
+[![Build Status](https://travis-ci.org/AndrewGorton/DigitalMarketplaceAlerter.svg?branch=master)](https://travis-ci.org/AndrewGorton/DigitalMarketplaceAlerter)
 
 ## So what is it?
 
