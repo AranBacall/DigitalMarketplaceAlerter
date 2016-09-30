@@ -1,7 +1,7 @@
 <html>
 <head>
     <#include "../fragments/head.ftl" parse="false">
-    <title>ADSC Recruitment - Forbidden</title>
+    <title>Digital Marketplace Alerting - Forbidden</title>
 </head>
 <body>
     <h1>Forbidden</h1>
