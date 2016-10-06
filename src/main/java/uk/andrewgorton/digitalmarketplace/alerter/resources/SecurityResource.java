@@ -7,7 +7,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.andrewgorton.digitalmarketplace.alerter.ExceptionFormatter;
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.views.security.LoginView;
@@ -77,7 +76,7 @@ public class SecurityResource {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error(ExceptionFormatter.formatAsString(e));
+                LOGGER.error(e.getMessage(), e);
             }
         }
 

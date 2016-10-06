@@ -46,8 +46,7 @@ public class DigitalMarketplacePoller implements Runnable {
             opportunityDAO.updateOpen(existingOpen);
             opportunityDAO.updateClosed(existingClosed);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            LOGGER.debug(ExceptionFormatter.formatAsString(e));
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }

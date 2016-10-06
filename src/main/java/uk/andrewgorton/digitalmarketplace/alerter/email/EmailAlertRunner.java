@@ -2,7 +2,6 @@ package uk.andrewgorton.digitalmarketplace.alerter.email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.andrewgorton.digitalmarketplace.alerter.ExceptionFormatter;
 
 public class EmailAlertRunner implements Runnable {
     private final Logger LOGGER = LoggerFactory.getLogger(EmailAlertRunner.class);
@@ -18,8 +17,7 @@ public class EmailAlertRunner implements Runnable {
         try {
             opportunityToAlertMatcher.process();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            LOGGER.debug(ExceptionFormatter.formatAsString(e));
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }
