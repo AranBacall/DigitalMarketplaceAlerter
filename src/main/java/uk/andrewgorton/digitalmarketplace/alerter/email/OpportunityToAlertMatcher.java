@@ -3,7 +3,6 @@ package uk.andrewgorton.digitalmarketplace.alerter.email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.Alert;
-import uk.andrewgorton.digitalmarketplace.alerter.ExceptionFormatter;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.AlertDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
@@ -59,8 +58,7 @@ public class OpportunityToAlertMatcher {
                 }
             });
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            LOGGER.debug(ExceptionFormatter.formatAsString(e));
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }
