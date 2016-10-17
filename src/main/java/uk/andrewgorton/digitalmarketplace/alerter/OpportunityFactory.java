@@ -1,5 +1,6 @@
 package uk.andrewgorton.digitalmarketplace.alerter;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -25,15 +26,15 @@ public class OpportunityFactory {
 
     private Opportunity create(Element singleResult) {
         Elements titleAndUrl = singleResult.select("h2.search-result-title");
-        String url = titleAndUrl.select("a[href]").attr("abs:href");
-        String title = titleAndUrl.select("a[href]").html();
+        String url = StringEscapeUtils.unescapeHtml4(titleAndUrl.select("a[href]").attr("abs:href"));
+        String title = StringEscapeUtils.unescapeHtml4(titleAndUrl.select("a[href]").html());
 
         Elements departmentAndLocation = singleResult.select("ul.search-result-important-metadata").select("li.search-result-metadata-item");
-        String department = departmentAndLocation.get(0).html();
-        String location = departmentAndLocation.get(1).html();
+        String department = StringEscapeUtils.unescapeHtml4(departmentAndLocation.get(0).html());
+        String location = StringEscapeUtils.unescapeHtml4(departmentAndLocation.get(1).html());
 
         Elements meta = singleResult.select("ul.search-result-metadata");
-        String type = meta.get(0).select("li.search-result-metadata-item").html();
+        String type = StringEscapeUtils.unescapeHtml4(meta.get(0).select("li.search-result-metadata-item").html());
         Elements publishedAndClosing = meta.get(1).select("li.search-result-metadata-item");
         boolean closed = false;
         DateTime published = null;
@@ -41,11 +42,11 @@ public class OpportunityFactory {
         if (publishedAndClosing.size() == 1) {
             closed = true;
         } else {
-            published = dateTimeFormatter.parseDateTime(publishedAndClosing.get(0).html().replaceFirst("^Published: ", ""));
-            closing = dateTimeFormatter.parseDateTime(publishedAndClosing.get(1).html().replaceFirst("^Closing: ", ""));
+            published = dateTimeFormatter.parseDateTime(StringEscapeUtils.unescapeHtml4(publishedAndClosing.get(0).html()).replaceFirst("^Published: ", ""));
+            closing = dateTimeFormatter.parseDateTime(StringEscapeUtils.unescapeHtml4(publishedAndClosing.get(1).html()).replaceFirst("^Closing: ", ""));
         }
 
-        String excerpt = singleResult.select("p.search-result-excerpt").html();
+        String excerpt = StringEscapeUtils.unescapeHtml4(singleResult.select("p.search-result-excerpt").html());
 
         DateTime fakeClosing = new DateTime().minusYears(100);
 
