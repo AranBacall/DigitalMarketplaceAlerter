@@ -18,8 +18,7 @@ public class Fetcher {
         try {
             return Jsoup.connect(website).get();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            LOGGER.debug(ExceptionFormatter.formatAsString(e));
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
