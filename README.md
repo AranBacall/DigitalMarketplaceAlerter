@@ -97,3 +97,11 @@ The application is a [Dropwizard](http://www.dropwizard.io) application.
 ### Licensing
 
 Please read [LICENSE.txt](LICENSE.txt) for licensing information.
+
+### Troubleshooting
+
+*Help! I'm behind a proxy!*
+
+```
+/usr/bin/java -Dhttps.proxyHost=my.proxy.com -Dhttps.proxyPort=3128 -jar <jarFile> server <configFile>
+```
