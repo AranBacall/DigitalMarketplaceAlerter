@@ -46,6 +46,43 @@
         <th>Last Updated</th>
         <td>${opportunity.lastUpdated}</td>
     </tr>
+    <tr>
+            <th>Estimated Duration</th>
+            <#if opportunity.duration??>
+                <td>
+                    <form action="/opportunity/${opportunity.id}/duration" method="post">
+                        <input type="text" name="duration" value="${opportunity.duration}">
+                        <input type="submit" value="Update"/>
+                    </form>
+                </td>
+
+            <#else>
+               <td>
+                     <form action="/opportunity/${opportunity.id}/duration" method="post">
+                          <input type="text" name="duration" >
+                          <input type="submit" value="Set"/>
+                     </form>
+               </td>
+            </#if>
+    </tr>
+    <tr>
+            <th>Estimated Cost</th>
+            <#if opportunity.cost??>
+                 <td>
+                     <form action="/opportunity/${opportunity.id}/cost" method="post">
+                          <input type="text" name="cost" value="${opportunity.cost}">
+                          <input type="submit" value="Update"/>
+                      </form>
+                 </td>
+            <#else>
+                  <td>
+                       <form action="/opportunity/${opportunity.id}/cost" method="post">
+                            <input type="text" name="cost" >
+                            <input type="submit" value="Set"/>
+                       </form>
+                  </td>
+            </#if>
+    </tr>
 </table>
 <p><a href="../">Back to list</a></p>
 </body>

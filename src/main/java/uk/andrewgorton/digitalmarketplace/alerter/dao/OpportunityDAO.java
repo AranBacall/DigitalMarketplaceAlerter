@@ -50,4 +50,11 @@ public interface OpportunityDAO {
 
     @SqlQuery("select * from opportunity where id = :id")
     Opportunity findById(@Bind("id") long id);
+
+    @SqlUpdate("update opportunity set duration = :duration where id = :id")
+    void setOpportunityDuration(@Bind("duration") int duration, @Bind("id") long id);
+
+    @SqlUpdate("update opportunity set cost = :cost where id = :id")
+    void setOpportunityCost(@Bind("cost") int cost, @Bind("id") long id);
+
 }

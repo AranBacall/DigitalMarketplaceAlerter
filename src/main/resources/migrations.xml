@@ -100,4 +100,12 @@
             <column name="enabled" value="false"/>
         </insert>
     </changeSet>
+    <changeSet id="3" author="koskinasm">
+        <addColumn tableName="opportunity">
+            <column name="duration" type="int"/>
+        </addColumn>
+        <addColumn tableName="opportunity">
+            <column name="cost" type="bigint"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
