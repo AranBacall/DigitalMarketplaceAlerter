@@ -9,10 +9,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.DetailView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.ListView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -64,5 +61,61 @@ public class OpportunityResource {
         return Response.seeOther(
                 uriInfo.getBaseUriBuilder().path(OpportunityResource.class).build())
                 .build();
+    }
+
+    @Path("/{id}/duration")
+    @POST
+    @Timed
+    @LoginRequired
+    public Response updateOpportunityDuration(@PathParam("id") long id,
+                                     @Context HttpServletRequest request,
+                                     @Context UriInfo uriInfo,
+                                     @FormParam("duration") String duration) {
+
+        try {
+            int durationInMonths = Integer.parseInt(duration);
+            if(opportunityDAO.findById(id) != null)
+            {
+                opportunityDAO.setOpportunityDuration(durationInMonths,id);
+                return Response.seeOther(
+                        uriInfo.getBaseUriBuilder().path(OpportunityResource.class).segment(String.valueOf(id)).build())
+                        .build();
+            }
+            else
+            {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }catch(NumberFormatException nfe)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @Path("/{id}/cost")
+    @POST
+    @Timed
+    @LoginRequired
+    public Response updateOpportunityCost(@PathParam("id") long id,
+                                              @Context HttpServletRequest request,
+                                              @Context UriInfo uriInfo,
+                                              @FormParam("cost") String cost) {
+
+        try {
+            int costInPounds = Integer.parseInt(cost);
+            if(opportunityDAO.findById(id) != null)
+            {
+                opportunityDAO.setOpportunityCost(costInPounds,id);
+                return Response.seeOther(
+                        uriInfo.getBaseUriBuilder().path(OpportunityResource.class).segment(String.valueOf(id)).build())
+                        .build();
+            }
+            else
+            {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }catch(NumberFormatException nfe)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 }

@@ -24,6 +24,8 @@ public class OpportunityMapper implements ResultSetMapper<Opportunity> {
         o.setFirstSeen(resultSet.getTimestamp("firstSeen"));
         o.setLastUpdated(resultSet.getTimestamp("lastUpdated"));
         o.setAlerted(resultSet.getBoolean("alerted"));
+        o.setDuration(resultSet.getInt("duration"));
+        o.setCost(resultSet.getInt("cost"));
         return o;
     }
 }

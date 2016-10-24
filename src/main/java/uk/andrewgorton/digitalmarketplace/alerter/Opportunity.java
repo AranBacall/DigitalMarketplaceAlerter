@@ -16,6 +16,8 @@ public class Opportunity {
     private Timestamp firstSeen;
     private Timestamp lastUpdated;
     private boolean alerted;
+    private int duration;
+    private long cost;
 
     public long getId() {
         return id;
@@ -120,4 +122,22 @@ public class Opportunity {
     public void setAlerted(boolean alerted) {
         this.alerted = alerted;
     }
+
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public long getCost() {
+        return cost;
+    }
+
+    public void setCost(long cost) {
+        this.cost = cost;
+    }
+
 }
