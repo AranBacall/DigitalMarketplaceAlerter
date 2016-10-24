@@ -51,7 +51,7 @@
             <#if opportunity.duration??>
                 <td>
                     <form action="./duration" method="post">
-                        <input type="text" name="duration" value="${opportunity.duration}">
+                        <input type="text" name="duration" value="${opportunity.duration}"> months
                         <input type="submit" value="Update"/>
                     </form>
                 </td>
@@ -59,7 +59,7 @@
             <#else>
                <td>
                      <form action="./duration" method="post">
-                          <input type="text" name="duration" >
+                          <input type="text" name="duration" > months
                           <input type="submit" value="Set"/>
                      </form>
                </td>
@@ -70,14 +70,14 @@
             <#if opportunity.cost??>
                  <td>
                      <form action="./cost" method="post">
-                          <input type="text" name="cost" value="${opportunity.cost}">
+                          <input type="text" name="cost" value="${opportunity.cost}"> daily
                           <input type="submit" value="Update"/>
                       </form>
                  </td>
             <#else>
                   <td>
                        <form action="./cost" method="post">
-                            <input type="text" name="cost" >
+                            <input type="text" name="cost" > daily
                             <input type="submit" value="Set"/>
                        </form>
                   </td>
