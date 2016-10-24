@@ -50,7 +50,7 @@
             <th>Estimated Duration</th>
             <#if opportunity.duration??>
                 <td>
-                    <form action="/opportunity/${opportunity.id}/duration" method="post">
+                    <form action="./duration" method="post">
                         <input type="text" name="duration" value="${opportunity.duration}">
                         <input type="submit" value="Update"/>
                     </form>
@@ -58,7 +58,7 @@
 
             <#else>
                <td>
-                     <form action="/opportunity/${opportunity.id}/duration" method="post">
+                     <form action="./duration" method="post">
                           <input type="text" name="duration" >
                           <input type="submit" value="Set"/>
                      </form>
@@ -69,14 +69,14 @@
             <th>Estimated Cost</th>
             <#if opportunity.cost??>
                  <td>
-                     <form action="/opportunity/${opportunity.id}/cost" method="post">
+                     <form action="./cost" method="post">
                           <input type="text" name="cost" value="${opportunity.cost}">
                           <input type="submit" value="Update"/>
                       </form>
                  </td>
             <#else>
                   <td>
-                       <form action="/opportunity/${opportunity.id}/cost" method="post">
+                       <form action="./cost" method="post">
                             <input type="text" name="cost" >
                             <input type="submit" value="Set"/>
                        </form>
