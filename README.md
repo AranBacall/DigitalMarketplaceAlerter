@@ -16,8 +16,8 @@ Maven3 and JDK8 is required. A fat jar is produced via Maven Package in the targ
 $ mvn package
 <snip>
 Process finished with exit code 0
-$ ls -sh target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar
-23M target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar
+$ ls -sh target/DigitalMarketplaceAlerter-1.0.5.jar
+23M target/DigitalMarketplaceAlerter-1.0.5.jar
 $
 ```
 
@@ -28,7 +28,7 @@ Copy the ```config/local.yml.sample``` file to ```config/local.yml``` and edit t
 Test the database migrations first.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar db migrate config/local.yml --dry-run
+$ java -jar target/DigitalMarketplaceAlerter-1.0.5.jar db migrate config/local.yml --dry-run
 <snip>
 -- Release Database Lock
 UPDATE PUBLIC.DATABASECHANGELOGLOCK SET LOCKED = FALSE, LOCKEDBY = NULL, LOCKGRANTED = NULL WHERE ID = 1;
@@ -40,7 +40,7 @@ $
 If no errors, then run the migration scripts.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar db migrate config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.5.jar db migrate config/local.yml
 <snip>
 INFO  [2016-09-26 12:15:06,218] liquibase: Successfully released change log lock
 $ 
@@ -49,7 +49,7 @@ $
 If this is the first time running, set the admin password on the database
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar setuserpassword -u admin -p new_password_here config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.5.jar setuserpassword -u admin -p new_password_here config/local.yml
 INFO  [2016-09-26 12:16:02,643] org.eclipse.jetty.util.log: Logging initialized @1224ms
 INFO  [2016-09-26 12:16:02,730] io.dropwizard.assets.AssetsBundle: Registering AssetBundle with name: assets for path /static/*
 Salted password: Y9v3wAX58S0mnew_password_here
@@ -61,7 +61,7 @@ $
 Now you can start it.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.5-SNAPSHOT.jar server config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.5.jar server config/local.yml
 <snip>
 INFO  [2016-09-26 12:16:57,023] org.eclipse.jetty.server.Server: Started @3241ms
 ```
