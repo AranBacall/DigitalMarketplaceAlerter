@@ -8,6 +8,7 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import io.dropwizard.views.ViewRenderer;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
@@ -27,7 +28,10 @@ import uk.andrewgorton.digitalmarketplace.alerter.resources.OpportunityResource;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.SecurityResource;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.SetUserPassword;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.EmailViewRenderer;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.ViewRendererLoader;
 
+import java.util.ServiceLoader;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -103,19 +107,13 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 TimeUnit.MINUTES);
 
         // Email Alerting
-        final HtmlEmailBodyFactory htmlEmailBodyFactory =
-                new HtmlEmailBodyFactory(configuration.getEmailFactory().getAdminName(),
-                        configuration.getEmailFactory().getAdminEmail());
-        final TextEmailBodyFactory textEmailBodyFactory =
-                new TextEmailBodyFactory(configuration.getEmailFactory().getAdminName(),
-                        configuration.getEmailFactory().getAdminEmail());
+        final EmailConfiguration emailConfiguration = configuration.getEmailConfiguration();
+        final EmailViewRenderer emailViewRenderer =
+                // ServiceLoader will load the currently active renderer (same code is in ViewBundle.java)
+                new EmailViewRenderer(new ViewRendererLoader(ServiceLoader.load(ViewRenderer.class)));
+        final EmailComposer emailComposer = new EmailComposer(emailConfiguration, emailViewRenderer);
         final EmailAlerter emailAlerter =
-                new EmailAlerter(configuration.getEmailFactory().getHost(),
-                        configuration.getEmailFactory().getPort(),
-                        configuration.getEmailFactory().getFrom(),
-                        htmlEmailBodyFactory,
-                        textEmailBodyFactory,
-                        configuration.getEmailFactory().isEnabled());
+                new EmailAlerter(emailConfiguration, emailComposer);
         final OpportunityToAlertMatcher opportunityToAlertMatcher = new OpportunityToAlertMatcher(opportunityDAO, alertDAO, emailAlerter);
         final EmailAlertRunner emailAlertRunner = new EmailAlertRunner(opportunityToAlertMatcher);
         ses.scheduleWithFixedDelay(emailAlertRunner, 0, 60, TimeUnit.SECONDS);
