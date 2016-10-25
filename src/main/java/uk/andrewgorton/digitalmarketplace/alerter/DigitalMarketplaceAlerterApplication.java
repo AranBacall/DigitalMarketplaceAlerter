@@ -25,6 +25,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.resources.AlertResource;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.HomepageResource;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.OpportunityResource;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.SecurityResource;
+import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.SetUserPassword;
 
@@ -47,6 +48,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
     public void initialize(Bootstrap<DigitalMarketplaceAlerterConfiguration> bootstrap) {
         bootstrap.addCommand(new GetHashedPasswordCommand());
         bootstrap.addCommand(new SetUserPassword(bootstrap.getApplication()));
+        bootstrap.addCommand(new CreateNewUser(bootstrap.getApplication()));
 
         bootstrap.addBundle(new MigrationsBundle<DigitalMarketplaceAlerterConfiguration>() {
             @Override
