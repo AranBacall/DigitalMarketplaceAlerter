@@ -8,6 +8,8 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import io.dropwizard.views.ViewRenderer;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
@@ -15,20 +17,21 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.AlertDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.BidManagerDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.AlertResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.HomepageResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.OpportunityResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.SecurityResource;
+import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.SetUserPassword;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.EmailViewRenderer;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.ViewRendererLoader;
 
+import java.util.ServiceLoader;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +71,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final OpportunityDAO opportunityDAO = jdbi.onDemand(OpportunityDAO.class);
         final AlertDAO alertDAO = jdbi.onDemand(AlertDAO.class);
         final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
+        final BidManagerDAO managerDAO = jdbi.onDemand(BidManagerDAO.class);
         final UserDAOFactory userDAOFactory = new UserDAOFactory(userDAO);
 
         environment.jersey().register(new AbstractBinder() {
@@ -87,10 +91,20 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(LoginRequiredFeature.class);
         environment.jersey().register(ForbiddenExceptionMapper.class);
 
+        // Email
+        final EmailConfiguration emailConfiguration = configuration.getEmailConfiguration();
+        final EmailViewRenderer emailViewRenderer =
+                // ServiceLoader will load the currently active renderer (same code is in ViewBundle.java)
+                new EmailViewRenderer(new ViewRendererLoader(ServiceLoader.load(ViewRenderer.class)));
+        final EmailComposer emailComposer = new EmailComposer(emailConfiguration, emailViewRenderer);
+        final EmailService emailService = new EmailService(emailComposer, emailConfiguration,
+                EmailValidator.getInstance());
+
         // Resources
         environment.jersey().register(new HomepageResource());
-        environment.jersey().register(new OpportunityResource(opportunityDAO));
+        environment.jersey().register(new OpportunityResource(opportunityDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
+        environment.jersey().register(new BidManagerResource(managerDAO));
         environment.jersey().register(new SecurityResource(userDAO));
 
         // Pollers
@@ -105,19 +119,8 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 TimeUnit.MINUTES);
 
         // Email Alerting
-        final HtmlEmailBodyFactory htmlEmailBodyFactory =
-                new HtmlEmailBodyFactory(configuration.getEmailFactory().getAdminName(),
-                        configuration.getEmailFactory().getAdminEmail());
-        final TextEmailBodyFactory textEmailBodyFactory =
-                new TextEmailBodyFactory(configuration.getEmailFactory().getAdminName(),
-                        configuration.getEmailFactory().getAdminEmail());
         final EmailAlerter emailAlerter =
-                new EmailAlerter(configuration.getEmailFactory().getHost(),
-                        configuration.getEmailFactory().getPort(),
-                        configuration.getEmailFactory().getFrom(),
-                        htmlEmailBodyFactory,
-                        textEmailBodyFactory,
-                        configuration.getEmailFactory().isEnabled());
+                new EmailAlerter(emailConfiguration, emailComposer);
         final OpportunityToAlertMatcher opportunityToAlertMatcher = new OpportunityToAlertMatcher(opportunityDAO, alertDAO, emailAlerter);
         final EmailAlertRunner emailAlertRunner = new EmailAlertRunner(opportunityToAlertMatcher);
         ses.scheduleWithFixedDelay(emailAlertRunner, 0, 60, TimeUnit.SECONDS);

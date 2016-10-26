@@ -3,7 +3,7 @@ package uk.andrewgorton.digitalmarketplace.alerter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
-import uk.andrewgorton.digitalmarketplace.alerter.email.EmailFactory;
+import uk.andrewgorton.digitalmarketplace.alerter.email.EmailConfiguration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,7 +19,7 @@ public class DigitalMarketplaceAlerterConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private EmailFactory emailFactory = new EmailFactory();
+    private EmailConfiguration emailConfiguration = new EmailConfiguration();
 
     public DataSourceFactory getDatabase() {
         return database;
@@ -39,12 +39,12 @@ public class DigitalMarketplaceAlerterConfiguration extends Configuration {
         this.sessionCookieName = sessionCookieName;
     }
 
-    public EmailFactory getEmailFactory() {
-        return emailFactory;
+    public EmailConfiguration getEmailConfiguration() {
+        return emailConfiguration;
     }
 
     @JsonProperty("email")
-    public void setEmailFactory(EmailFactory emailFactory) {
-        this.emailFactory = emailFactory;
+    public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
+        this.emailConfiguration = emailConfiguration;
     }
 }
