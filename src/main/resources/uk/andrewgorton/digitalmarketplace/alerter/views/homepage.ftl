@@ -19,6 +19,10 @@
         <td><a href="alert/">Alerts</a></td>
         <td>Create or modify who gets notified when a new opportunity is detected</td>
     </tr>
+    <tr>
+        <td><a href="report/">Reports</a></td>
+        <td>View the latest DOS reports</td>
+    </tr>
 </table>
 <form action="${logoutLocation}" method="POST"><input type="submit" value="Logout"></form>
 </body>

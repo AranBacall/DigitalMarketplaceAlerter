@@ -18,13 +18,11 @@ import uk.andrewgorton.digitalmarketplace.alerter.dao.AlertDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.report.PieChartDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.AlertResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.HomepageResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.OpportunityResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.SecurityResource;
+import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.SetUserPassword;
@@ -66,6 +64,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(environment, configuration.getDatabase(), "h2");
         final OpportunityDAO opportunityDAO = jdbi.onDemand(OpportunityDAO.class);
+        final PieChartDAO pieChartDAO = jdbi.onDemand(PieChartDAO.class);
         final AlertDAO alertDAO = jdbi.onDemand(AlertDAO.class);
         final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
         final UserDAOFactory userDAOFactory = new UserDAOFactory(userDAO);
@@ -90,6 +89,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         // Resources
         environment.jersey().register(new HomepageResource());
         environment.jersey().register(new OpportunityResource(opportunityDAO));
+        environment.jersey().register(new ReportResource(pieChartDAO));
         environment.jersey().register(new AlertResource(alertDAO));
         environment.jersey().register(new SecurityResource(userDAO));
 
