@@ -1,12 +1,14 @@
 package uk.andrewgorton.digitalmarketplace.alerter.email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-public class EmailFactory {
+public class EmailConfiguration {
     @NotEmpty
     private String host;
 
@@ -84,4 +86,5 @@ public class EmailFactory {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
 }
