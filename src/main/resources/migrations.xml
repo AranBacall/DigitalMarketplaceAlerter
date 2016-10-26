@@ -108,4 +108,32 @@
             <column name="cost" type="bigint"/>
         </addColumn>
     </changeSet>
+    <changeSet id="4" author="koskinasm">
+        <addColumn tableName="opportunity">
+            <column name="OMT" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="opportunity">
+            <column name="response" type="bigint"/>
+        </addColumn>
+        <createTable tableName="response">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="responseType" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="id"
+                                 baseTableName="response"
+                                 constraintName="fk_response_id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="opportunity"/>
+    </changeSet>
 </databaseChangeLog>
