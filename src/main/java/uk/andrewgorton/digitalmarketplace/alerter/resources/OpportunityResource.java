@@ -6,10 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.ResponseDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.EmailService;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.DetailView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.ListView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.response.ResponseListView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -22,10 +24,13 @@ import javax.ws.rs.core.UriInfo;
 public class OpportunityResource {
     private final Logger LOGGER = LoggerFactory.getLogger(OpportunityResource.class);
     private final OpportunityDAO opportunityDAO;
+    private final ResponseDAO responseDAO;
     private final EmailService emailService;
 
-    public OpportunityResource(OpportunityDAO opportunityDAO, EmailService emailService) {
+    public OpportunityResource(OpportunityDAO opportunityDAO,
+                               ResponseDAO responseDAO, EmailService emailService) {
         this.opportunityDAO = opportunityDAO;
+        this.responseDAO = responseDAO;
         this.emailService = emailService;
     }
 
@@ -145,5 +150,23 @@ public class OpportunityResource {
 
         return Response.seeOther(
                 uriInfo.getBaseUriBuilder().path(OpportunityResource.class).build()).build();
+    }
+
+    @Path("{id}/response")
+    @GET
+    @Timed
+    public ResponseListView responseHandling(@PathParam("id") Long opportunityId) {
+        return new ResponseListView(opportunityId, responseDAO.findAll());
+    }
+
+    @Path("{id}/response")
+    @POST
+    @Timed
+    public Response responseHandling(@PathParam("id") Long opportunityId,
+                                             @FormParam("response") Long responseId) {
+        responseDAO.link(opportunityId, responseId);
+
+        return Response.ok().entity("<h1>Thanks for responding!</h1><br>" +
+                "<p>You may now close this page</p>").build();
     }
 }

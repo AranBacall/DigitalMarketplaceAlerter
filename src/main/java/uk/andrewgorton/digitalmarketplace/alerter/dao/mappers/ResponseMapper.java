@@ -10,6 +10,6 @@ import java.sql.SQLException;
 public class ResponseMapper implements ResultSetMapper<Response> {
     @Override
     public Response map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
-        return new Response(resultSet.getLong("id"), resultSet.getString("reason"), resultSet.getString("reason"));
+        return new Response(resultSet.getLong("id"), resultSet.getString("response"), resultSet.getString("reason"));
     }
 }

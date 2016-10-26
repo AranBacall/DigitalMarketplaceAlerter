@@ -122,6 +122,9 @@
         </insert>
     </changeSet>
     <changeSet id="5" author="hendersonra">
+        <addColumn tableName="opportunity">
+            <column name="OMT" type="varchar(255)"/>
+        </addColumn>
         <createTable tableName="response">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -131,6 +134,32 @@
             </column>
             <column name="reason" type="varchar(255)" defaultValue=""/>
         </createTable>
+        <insert tableName="response">
+            <column name="response" value="Bidding"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="Qualifying"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="No"/>
+            <column name="reason" value="lack of resources"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="No"/>
+            <column name="reason" value="not a good business opportunity"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="No"/>
+            <column name="reason" value="no time to respond"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="No"/>
+            <column name="reason" value="cold bid (no relationship)"/>
+        </insert>
+        <insert tableName="response">
+            <column name="response" value="No"/>
+            <column name="reason" value="other"/>
+        </insert>
         <createTable tableName="opportunity_response">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

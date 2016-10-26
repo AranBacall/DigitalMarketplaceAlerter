@@ -23,9 +23,4 @@ public class Response {
     public String getReason() {
         return reason;
     }
-
-    public Response(long id) {
-
-        this.id = id;
-    }
 }
