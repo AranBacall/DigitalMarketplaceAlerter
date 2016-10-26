@@ -87,7 +87,7 @@
         <th>Email Bid Managers</th>
         <td>
             <form action="./bidmanager" method="post">
-                <input type="text" name="emails" value="bid.manager@cgi.com, bid.manager2@cgi.com">
+                <input type="text" name="emails" placeholder="bid.manager@cgi.com, bid.manager2@cgi.com">
                 <input type="submit" value="Email"/>
             </form>
         </td>
