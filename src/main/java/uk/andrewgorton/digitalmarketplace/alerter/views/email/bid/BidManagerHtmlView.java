@@ -12,34 +12,21 @@ import java.util.List;
 public class BidManagerHtmlView extends View {
 
     private Opportunity opportunity;
-    private List<Response> responses;
-    private String adminName;
-    private String adminEmail;
+    private String responseBaseUrl;
 
 
     public BidManagerHtmlView(Opportunity opportunity,
-                              List<Response> responses,
-                              String adminName, String adminEmail) {
+                              String responseBaseUrl) {
         super("emailbidmanager-html.ftl");
         this.opportunity = opportunity;
-        this.responses = responses;
-        this.adminName = adminName;
-        this.adminEmail = adminEmail;
+        this.responseBaseUrl = responseBaseUrl;
     }
 
     public Opportunity getOpportunity() {
         return opportunity;
     }
 
-    public List<Response> getResponses() {
-        return responses;
-    }
-
-    public String getAdminName() {
-        return adminName;
-    }
-
-    public String getAdminEmail() {
-        return adminEmail;
+    public String getResponseBaseUrl() {
+        return responseBaseUrl;
     }
 }

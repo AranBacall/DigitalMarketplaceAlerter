@@ -18,13 +18,5 @@ ${opportunity.closing?date}
 Link:
 ${opportunity.url}
 
-Please respond using one of the links below:
-<#list responses as response>
-    <tr>
-        <td>
-            <a href="${response.url}">${response.description}</a>
-        </td>
-    </tr>
-</#list>
-
-Please contact ${adminName} (${adminEmail}) for any changes to your subscription.
+Please respond by going to the following address:
+${responseUrl}

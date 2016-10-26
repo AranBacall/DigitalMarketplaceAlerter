@@ -81,22 +81,6 @@ tr:hover {
 <br>
 <hr>
 <br>
-Please respond using one of the links below:
-<br>
-<table>
-    <tr>
-        <th>Responses</th>
-    </tr>
-    <#list responses as response>
-        <tr>
-            <td>
-                <a href="${response.url}">${response.description}</a>
-            </td>
-        </tr>
-    </#list>
-</table>
-<br>
-<p>For changes to your subscription, contact <a href="mailto:${adminEmail}
-?subject=Digital Markplace Subscription">${adminName}</a>.</p>
+Please <a href="${responseBaseUrl}">respond here</a>
 </body>
 </html>

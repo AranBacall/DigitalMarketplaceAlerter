@@ -121,4 +121,34 @@
             <column name="email" value="test@example.com"/>
         </insert>
     </changeSet>
+    <changeSet id="5" author="hendersonra">
+        <createTable tableName="response">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="response" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="varchar(255)" defaultValue=""/>
+        </createTable>
+        <createTable tableName="opportunity_response">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="opportunity" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="response" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="opportunity_response" baseColumnNames="opportunity"
+                                 constraintName="fk_opportunity"
+                                 referencedTableName="opportunity"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="opportunity_response" baseColumnNames="response"
+                                 constraintName="fk_response"
+                                 referencedTableName="response"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>
