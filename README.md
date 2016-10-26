@@ -58,6 +58,20 @@ Updated
 $
 ```
 
+You can also create new users and assign passwords to them by running the following command:
+
+```
+$ java -jar target/DigitalMarketplaceAlerter-1.0.6-SNAPSHOT.jar createnewuser -u username -p password config/local.yml
+INFO  [2016-10-24 10:48:49,857] org.eclipse.jetty.util.log: Logging initialized @1248ms
+INFO  [2016-10-24 10:48:49,935] io.dropwizard.server.SimpleServerFactory: Registering jersey handler with root path prefix: /dma
+INFO  [2016-10-24 10:48:49,935] io.dropwizard.server.SimpleServerFactory: Registering admin handler with root path prefix: /dma/admin
+INFO  [2016-10-24 10:48:49,935] io.dropwizard.assets.AssetsBundle: Registering AssetBundle with name: assets for path /static/*
+Salted password: IvY2bTG39jdEpassword
+Hash of salted password: c7837936972d8c1e312fe91a837abc79d65f88571cfc82a517d09d4d439594e6
+A new user with username 'username' and password 'password' has been created!
+
+```
+
 Now you can start it.
 
 ```
