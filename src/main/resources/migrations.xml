@@ -108,4 +108,17 @@
             <column name="cost" type="bigint"/>
         </addColumn>
     </changeSet>
+    <changeSet id="4" author="hendersonra">
+        <createTable tableName="bidmanager">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <insert tableName="bidmanager">
+            <column name="email" value="test@example.com"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

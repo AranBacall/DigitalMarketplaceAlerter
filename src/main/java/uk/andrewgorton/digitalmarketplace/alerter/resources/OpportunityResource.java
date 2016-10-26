@@ -1,10 +1,13 @@
 package uk.andrewgorton.digitalmarketplace.alerter.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import org.apache.commons.mail.EmailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.email.EmailService;
+import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.DetailView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.ListView;
 
@@ -19,9 +22,11 @@ import javax.ws.rs.core.UriInfo;
 public class OpportunityResource {
     private final Logger LOGGER = LoggerFactory.getLogger(OpportunityResource.class);
     private final OpportunityDAO opportunityDAO;
+    private final EmailService emailService;
 
-    public OpportunityResource(OpportunityDAO opportunityDAO) {
+    public OpportunityResource(OpportunityDAO opportunityDAO, EmailService emailService) {
         this.opportunityDAO = opportunityDAO;
+        this.emailService = emailService;
     }
 
     @GET
@@ -117,5 +122,28 @@ public class OpportunityResource {
         {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+    }
+
+    @Path("/{id}/bidmanager")
+    @POST
+    @Timed
+    @LoginRequired
+    public Response emailBidManagers(@Context UriInfo uriInfo,
+                                     @PathParam("id") long id,
+                                     @FormParam("emails") String emailList) {
+        Opportunity opportunity = opportunityDAO.findById(id);
+        if (opportunity != null) {
+            try {
+                emailService.sendBidManagerEmail(opportunity, emailList.split(","));
+            } catch (EmailException e) {
+                LOGGER.error("Failed to send bid manager email", e);
+                return Response.serverError().entity(e.getMessage()).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        return Response.seeOther(
+                uriInfo.getBaseUriBuilder().path(OpportunityResource.class).build()).build();
     }
 }

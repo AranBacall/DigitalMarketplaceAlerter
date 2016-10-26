@@ -18,5 +18,10 @@ public interface UserDAO {
                                @Bind("password") String password);
 
 
+    @SqlUpdate("insert into user (username,salt,password,disabled) values (:username,:salt,:password, false)")
+    void createNewUser(@Bind("username") String username,
+                               @Bind("salt") String salt,
+                               @Bind("password") String password);
+
     void close();
 }
