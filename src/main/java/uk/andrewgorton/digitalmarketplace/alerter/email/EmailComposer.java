@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.views.email.EmailViewRenderer;
-import uk.andrewgorton.digitalmarketplace.alerter.views.email.AlertHtmlView;
-import uk.andrewgorton.digitalmarketplace.alerter.views.email.AlertTextView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.alert.AlertHtmlView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.email.alert.AlertTextView;
 
 import java.io.IOException;
 
