@@ -144,10 +144,14 @@
         </createTable>
         <addForeignKeyConstraint baseTableName="opportunity_response" baseColumnNames="opportunity"
                                  constraintName="fk_opportunity"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
                                  referencedTableName="opportunity"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="opportunity_response" baseColumnNames="response"
                                  constraintName="fk_response"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
                                  referencedTableName="response"
                                  referencedColumnNames="id"/>
     </changeSet>
