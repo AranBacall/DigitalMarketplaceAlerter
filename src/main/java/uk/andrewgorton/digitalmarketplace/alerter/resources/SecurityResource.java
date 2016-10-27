@@ -80,7 +80,7 @@ public class SecurityResource {
                 LOGGER.error(e.getMessage(), e);
             }
         }
-        else if(u.isDisabled())
+        else if(u != null && u.isDisabled())
         {
             throw new ForbiddenException();
         }
