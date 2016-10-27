@@ -39,6 +39,7 @@ public class BidManagerResource {
     @Path("/{id}/delete")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response delete(@PathParam("id") long id,
                            @Context UriInfo uriInfo) {
         bidManagerDAO.delete(id);
@@ -52,6 +53,7 @@ public class BidManagerResource {
     @Path("/create")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response create(@FormParam("email") String email,
                            @Context UriInfo uriInfo) {
         EmailValidator ev = EmailValidator.getInstance();

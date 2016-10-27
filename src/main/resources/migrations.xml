@@ -160,7 +160,4 @@
         <rollback>
         </rollback>
     </changeSet>
-    <changeSet id="test-user" author="koskinasm">
-        <!--Comment this out before production-->
-    </changeSet>
 </databaseChangeLog>

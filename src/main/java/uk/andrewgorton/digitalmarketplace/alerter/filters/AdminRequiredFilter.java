@@ -2,6 +2,7 @@ package uk.andrewgorton.digitalmarketplace.alerter.filters;
 
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.exceptions.UnauthorizedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,7 +25,10 @@ public class AdminRequiredFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
         final HttpSession session = webRequest.getSession();
-        isAdmin(session,userDAO);
+        if(!isAdmin(session,userDAO))
+        {
+            throw new UnauthorizedException();
+        }
     }
 
     /**
@@ -41,10 +45,10 @@ public class AdminRequiredFilter implements ContainerRequestFilter {
         User currentUser = userDAO.findById(userId);
 
         if (session.getAttribute("authenticated") == null || !((boolean) session.getAttribute("authenticated"))) {
-            throw new ForbiddenException();
+            return false;
         }
         else if(currentUser == null || !currentUser.isAdmin()) {
-            throw new ForbiddenException();
+            return false;
         }
         return true;
     }

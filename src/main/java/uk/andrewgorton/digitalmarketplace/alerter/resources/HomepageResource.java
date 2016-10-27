@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.exceptions.ForbiddenException;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFilter;
 import uk.andrewgorton.digitalmarketplace.alerter.views.HomeView;
 
@@ -48,10 +49,12 @@ public class HomepageResource {
                     .scheme(null)
                     .build();
 
-
+            usersLocation = uriInfo
+                    .getBaseUriBuilder()
+                    .path(UserResource.class)
+                    .scheme(null)
+                    .build();
         }
-
-
 
         return new HomeView(logoutLocation,bidManagersLocation,usersLocation);
     }
