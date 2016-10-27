@@ -22,6 +22,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
+import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
@@ -89,6 +90,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.servlets().setSessionHandler(sh);
 
         environment.jersey().register(LoginRequiredFeature.class);
+        environment.jersey().register(AdminRequiredFeature.class);
         environment.jersey().register(ForbiddenExceptionMapper.class);
 
         // Email
@@ -101,7 +103,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 EmailValidator.getInstance());
 
         // Resources
-        environment.jersey().register(new HomepageResource());
+        environment.jersey().register(new HomepageResource(userDAO));
         environment.jersey().register(new OpportunityResource(opportunityDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
         environment.jersey().register(new BidManagerResource(managerDAO));

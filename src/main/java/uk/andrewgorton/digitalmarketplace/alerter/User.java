@@ -7,14 +7,16 @@ public class User {
     private final String salt;
     private final String password;
     private final boolean disabled;
+    private boolean admin = false;
 
-    public User(long id, String username, String email, String salt, String password, boolean disabled) {
+    public User(long id, String username, String email, String salt, String password, boolean disabled, boolean admin) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.salt = salt;
         this.password = password;
         this.disabled = disabled;
+        this.admin = admin;
     }
 
     public long getId() {
@@ -39,5 +41,10 @@ public class User {
 
     public boolean isDisabled() {
         return disabled;
+    }
+
+    public boolean isAdmin()
+    {
+        return this.admin;
     }
 }

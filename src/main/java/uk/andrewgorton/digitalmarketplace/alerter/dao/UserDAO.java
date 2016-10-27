@@ -12,13 +12,16 @@ public interface UserDAO {
     @SqlQuery("select * from user where username = :username")
     User findByUsername(@Bind("username") String username);
 
+    @SqlQuery("select * from user where id = :id")
+    User findById(@Bind("id") Long id);
+
     @SqlUpdate("update user set salt = :salt, password = :password where username = :username")
     void updateUserCredentials(@Bind("username") String username,
                                @Bind("salt") String salt,
                                @Bind("password") String password);
 
 
-    @SqlUpdate("insert into user (username,salt,password,disabled) values (:username,:salt,:password, false)")
+    @SqlUpdate("insert into user (username,salt,password,disabled,admin) values (:username,:salt,:password, false, false)")
     void createNewUser(@Bind("username") String username,
                                @Bind("salt") String salt,
                                @Bind("password") String password);
