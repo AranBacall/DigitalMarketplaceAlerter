@@ -44,12 +44,10 @@ public class AdminRequiredFilter implements ContainerRequestFilter {
         Long userId = (Long) session.getAttribute("userid");
         User currentUser = userDAO.findById(userId);
 
-        if (session.getAttribute("authenticated") == null || !((boolean) session.getAttribute("authenticated"))) {
+        if ( (session.getAttribute("authenticated") == null || !((boolean) session.getAttribute("authenticated"))) || (currentUser == null || !currentUser.isAdmin())) {
             return false;
         }
-        else if(currentUser == null || !currentUser.isAdmin()) {
-            return false;
-        }
+
         return true;
     }
 }

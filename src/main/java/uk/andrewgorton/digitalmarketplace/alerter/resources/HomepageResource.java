@@ -38,11 +38,18 @@ public class HomepageResource {
                 .scheme(null)
                 .build();
 
+        URI alertsLocation = null;
         URI bidManagersLocation = null;
         URI usersLocation = null;
 
         if(AdminRequiredFilter.isAdmin(session,userDAO))
         {
+            alertsLocation = uriInfo
+                    .getBaseUriBuilder()
+                    .path(AlertResource.class)
+                    .scheme(null)
+                    .build();
+
             bidManagersLocation = uriInfo
                     .getBaseUriBuilder()
                     .path(BidManagerResource.class)
@@ -56,6 +63,6 @@ public class HomepageResource {
                     .build();
         }
 
-        return new HomeView(logoutLocation,bidManagersLocation,usersLocation);
+        return new HomeView(logoutLocation,alertsLocation,bidManagersLocation,usersLocation);
     }
 }

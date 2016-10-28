@@ -15,10 +15,12 @@
         <td><a href="opportunity/">Opportunities</a></td>
         <td>All DOS opportunities we've seen</td>
     </tr>
-    <tr>
-        <td><a href="alert/">Alerts</a></td>
-        <td>Create or modify who gets notified when a new opportunity is detected</td>
-    </tr>
+    <#if alertsLocation??>
+        <tr>
+             <td><a href="${alertsLocation}">Alerts</a></td>
+             <td>Create or modify who gets notified when a new opportunity is detected</td>
+        </tr>
+    </#if>
     <#if usersLocation??>
         <tr>
             <td><a href="${usersLocation}">Users</a></td>
