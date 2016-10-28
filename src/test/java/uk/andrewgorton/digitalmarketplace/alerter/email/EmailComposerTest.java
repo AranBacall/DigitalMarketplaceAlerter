@@ -30,7 +30,7 @@ public class EmailComposerTest {
     private Opportunity opportunity;
 
     @Test
-    public void Success() throws Exception {
+    public void ComposeAlert() throws Exception {
         String host = "host";
         int port = 1;
         String from = "nobody@nowhere.com";
@@ -71,6 +71,33 @@ public class EmailComposerTest {
         EmailComposer composer = new EmailComposer(configuration, renderer);
 
         composer.composeAlert(opportunity);
+    }
+
+    @Test
+    public void ComposeBidManagerEmail() throws Exception {
+        String host = "host";
+        int port = 1;
+        String from = "nobody@nowhere.com";
+        String customer = "customer";
+        String htmlContent = "htmlMsg";
+        String textContent = "txtMsg";
+        String responseBaseUrl = "responseUrl";
+
+        when(configuration.getHost()).thenReturn(host);
+        when(configuration.getPort()).thenReturn(port);
+        when(configuration.getFrom()).thenReturn(from);
+        when(opportunity.getCustomer()).thenReturn(customer);
+        when(renderer.renderEmail(any(View.class)))
+                .thenReturn(htmlContent)
+                .thenReturn(textContent);
+        EmailComposer composer = new EmailComposer(configuration, renderer);
+
+        HtmlEmail email = composer.composeBigManagerEmail(opportunity, responseBaseUrl);
+
+        assertEquals(host, email.getHostName());
+        assertEquals(Integer.toString(port), email.getSmtpPort());
+        assertEquals(from, email.getFromAddress().toString());
+        assertTrue(email.getSubject().contains(customer));
     }
 
 }

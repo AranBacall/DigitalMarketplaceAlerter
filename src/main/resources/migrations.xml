@@ -184,4 +184,23 @@
                                  referencedTableName="response"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="6" author="hendersonra">
+        <createTable tableName="bidmanager_session">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="key" type="varchar(255)" >
+                <constraints nullable="false" />
+            </column>
+            <column name="opportunity" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="bidmanager_session" baseColumnNames="opportunity"
+                                 constraintName="fk_bidmanager_session_opportunity"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedTableName="opportunity"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>

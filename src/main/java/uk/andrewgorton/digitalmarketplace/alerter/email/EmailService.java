@@ -10,7 +10,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import java.util.Arrays;
 
 /**
- * Created by ross on 26/10/16.
+ * Masks email composition and sending so that this is not directly called by resources.
  */
 public class EmailService {
 
@@ -27,17 +27,18 @@ public class EmailService {
         this.validator = validator;
     }
 
-    public void sendBidManagerEmail(Opportunity opportunity, String[] emailArray) throws EmailException {
+    public void sendBidManagerEmail(Opportunity opportunity, String[] emailArray,
+                                    String responseUrl) throws EmailException {
 
         if (!configuration.isEnabled()) {
             throw new EmailException("Email configuration not enabled");
         }
 
-        HtmlEmail email = composer.composeAlert(opportunity);
+        HtmlEmail email = composer.composeBigManagerEmail(opportunity, responseUrl);
         Arrays.stream(emailArray)
                 .map(String::trim)
                 .distinct()
-                //.filter(validator::isValid)
+                .filter(validator::isValid)
                 .forEach(bm -> {
                     try {
                         email.addTo(bm);

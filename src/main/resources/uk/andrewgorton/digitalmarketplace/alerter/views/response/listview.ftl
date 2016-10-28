@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Please select a response from the list below:</h1>
-<form action="${opportunity}/response" method="post">
+<form method="post">
     <#list responses as response>
         <input type="radio" name="response" value="${response.id}">
         <#if response.response == "No">
