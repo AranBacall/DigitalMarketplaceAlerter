@@ -2,6 +2,7 @@ package uk.andrewgorton.digitalmarketplace.alerter.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.validator.routines.EmailValidator;
+import uk.andrewgorton.digitalmarketplace.alerter.annotations.AdminRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.AlertDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.views.alert.ListView;
@@ -26,6 +27,7 @@ public class AlertResource {
     @GET
     @Timed
     @LoginRequired
+    @AdminRequired
     public Object getAll(@Context HttpServletRequest request) {
         if (!request.getRequestURI().endsWith("/")) {
             return Response.seeOther(UriBuilder.fromPath(request.getRequestURI() + "/").build())
@@ -39,6 +41,7 @@ public class AlertResource {
     @Path("/{id}/enable")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response enableAlert(@PathParam("id") long id,
                                 @Context UriInfo uriInfo) {
         alertDAO.enable(id);
@@ -52,6 +55,7 @@ public class AlertResource {
     @Path("/{id}/disable")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response disable(@PathParam("id") long id,
                             @Context UriInfo uriInfo) {
         alertDAO.disable(id);
@@ -65,6 +69,7 @@ public class AlertResource {
     @Path("/{id}/delete")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response delete(@PathParam("id") long id,
                            @Context UriInfo uriInfo) {
         alertDAO.delete(id);
@@ -78,6 +83,7 @@ public class AlertResource {
     @Path("/create")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response create(@FormParam("email") String email,
                            @FormParam("customerRegex") String customerMatchRegex,
                            @Context UriInfo uriInfo) {

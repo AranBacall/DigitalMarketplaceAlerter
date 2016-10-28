@@ -15,7 +15,7 @@ public class UserMapper implements ResultSetMapper<User> {
                 resultSet.getString("email"),
                 resultSet.getString("salt"),
                 resultSet.getString("password"),
-                resultSet.getBoolean("disabled"));
-
+                resultSet.getBoolean("disabled"),
+                resultSet.getBoolean("admin") );
     }
 }

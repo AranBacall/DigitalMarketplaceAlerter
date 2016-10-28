@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.*;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
+import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
+import uk.andrewgorton.digitalmarketplace.alerter.mappers.UnauthorizedExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
@@ -87,7 +89,9 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.servlets().setSessionHandler(sh);
 
         environment.jersey().register(LoginRequiredFeature.class);
+        environment.jersey().register(AdminRequiredFeature.class);
         environment.jersey().register(ForbiddenExceptionMapper.class);
+        environment.jersey().register(UnauthorizedExceptionMapper.class);
 
         // Email
         final EmailConfiguration emailConfiguration = configuration.getEmailConfiguration();
@@ -99,9 +103,10 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 EmailValidator.getInstance());
 
         // Resources
-        environment.jersey().register(new HomepageResource());
+        environment.jersey().register(new HomepageResource(userDAO));
         environment.jersey().register(new OpportunityResource(opportunityDAO, responseDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
+        environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new BidManagerResource(managerDAO));
         environment.jersey().register(new SecurityResource(userDAO));
 
