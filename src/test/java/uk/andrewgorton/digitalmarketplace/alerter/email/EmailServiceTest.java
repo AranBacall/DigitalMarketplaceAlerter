@@ -43,7 +43,7 @@ public class EmailServiceTest {
         String[] emails = {"test@example.com", "test2@example.com"};
         when(configuration.isEnabled()).thenReturn(true);
         when(validator.isValid(anyString())).thenReturn(true);
-        when(composer.composeBigManagerEmail(opportunity, responseUrl)).thenReturn(email);
+        when(composer.composeBidManagerEmail(opportunity, responseUrl)).thenReturn(email);
         EmailService service = new EmailService(composer, configuration, validator);
 
         service.sendBidManagerEmail(opportunity, emails, responseUrl);
@@ -69,7 +69,7 @@ public class EmailServiceTest {
         String[] emails = {"  test@example.com", "test@example.com  ", "test2@example.com"};
         when(validator.isValid(anyString())).thenReturn(true);
         when(configuration.isEnabled()).thenReturn(true);
-        when(composer.composeBigManagerEmail(opportunity, responseUrl)).thenReturn(email);
+        when(composer.composeBidManagerEmail(opportunity, responseUrl)).thenReturn(email);
         EmailService service = new EmailService(composer, configuration, validator);
 
         service.sendBidManagerEmail(opportunity, emails, responseUrl);

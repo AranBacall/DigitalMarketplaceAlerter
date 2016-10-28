@@ -92,7 +92,7 @@ public class EmailComposerTest {
                 .thenReturn(textContent);
         EmailComposer composer = new EmailComposer(configuration, renderer);
 
-        HtmlEmail email = composer.composeBigManagerEmail(opportunity, responseBaseUrl);
+        HtmlEmail email = composer.composeBidManagerEmail(opportunity, responseBaseUrl);
 
         assertEquals(host, email.getHostName());
         assertEquals(Integer.toString(port), email.getSmtpPort());

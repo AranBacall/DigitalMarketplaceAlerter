@@ -34,7 +34,7 @@ public class EmailService {
             throw new EmailException("Email configuration not enabled");
         }
 
-        HtmlEmail email = composer.composeBigManagerEmail(opportunity, responseUrl);
+        HtmlEmail email = composer.composeBidManagerEmail(opportunity, responseUrl);
         Arrays.stream(emailArray)
                 .map(String::trim)
                 .distinct()

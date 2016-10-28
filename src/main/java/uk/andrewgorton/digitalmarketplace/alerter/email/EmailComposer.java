@@ -67,7 +67,7 @@ public class EmailComposer {
      * @param opportunity the opportunity that will form the content of this alert email
      * @return a new {@link HtmlEmail} that needs recipients, but is otherwise ready to send
      */
-    public HtmlEmail composeBigManagerEmail(Opportunity opportunity, String responseUrl) throws EmailException {
+    public HtmlEmail composeBidManagerEmail(Opportunity opportunity, String responseUrl) throws EmailException {
         HtmlEmail email = new HtmlEmail();
         email.setHostName(configuration.getHost());
         email.setSmtpPort(configuration.getPort());
