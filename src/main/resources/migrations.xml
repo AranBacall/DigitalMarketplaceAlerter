@@ -149,4 +149,15 @@
                                  referencedColumnNames="id"
                                  referencedTableName="opportunity"/>
     </changeSet>
+    <changeSet id="6" author="koskinasm">
+        <addColumn tableName="user">
+            <column name="admin" type="boolean"/>
+        </addColumn>
+        <update tableName="user">
+            <column name='admin' value='true' />
+            <where>username = 'admin'</where>
+        </update>
+        <rollback>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

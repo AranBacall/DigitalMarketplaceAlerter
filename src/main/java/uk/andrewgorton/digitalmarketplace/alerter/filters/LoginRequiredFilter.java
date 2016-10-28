@@ -21,8 +21,7 @@ public class LoginRequiredFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
         final HttpSession session = webRequest.getSession();
 
-        if (session.getAttribute("authenticated") == null ||
-                !((boolean) session.getAttribute("authenticated"))) {
+        if (session.getAttribute("authenticated") == null || !((boolean) session.getAttribute("authenticated"))) {
             throw new ForbiddenException();
         }
     }

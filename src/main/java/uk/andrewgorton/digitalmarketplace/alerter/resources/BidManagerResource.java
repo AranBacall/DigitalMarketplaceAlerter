@@ -2,6 +2,7 @@ package uk.andrewgorton.digitalmarketplace.alerter.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.validator.routines.EmailValidator;
+import uk.andrewgorton.digitalmarketplace.alerter.annotations.AdminRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.BidManagerDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.views.bid.BidManagerListView;
@@ -24,6 +25,7 @@ public class BidManagerResource {
     @GET
     @Timed
     @LoginRequired
+    @AdminRequired
     public Object getAll(@Context HttpServletRequest request) {
         if (!request.getRequestURI().endsWith("/")) {
             return Response.seeOther(UriBuilder.fromPath(request.getRequestURI() + "/").build())
@@ -37,6 +39,7 @@ public class BidManagerResource {
     @Path("/{id}/delete")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response delete(@PathParam("id") long id,
                            @Context UriInfo uriInfo) {
         bidManagerDAO.delete(id);
@@ -50,6 +53,7 @@ public class BidManagerResource {
     @Path("/create")
     @Timed
     @LoginRequired
+    @AdminRequired
     public Response create(@FormParam("email") String email,
                            @Context UriInfo uriInfo) {
         EmailValidator ev = EmailValidator.getInstance();

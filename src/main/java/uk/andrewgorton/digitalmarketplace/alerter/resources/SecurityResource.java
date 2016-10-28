@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
+import javax.ws.rs.ForbiddenException;
 import uk.andrewgorton.digitalmarketplace.alerter.views.security.LoginView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,6 +79,10 @@ public class SecurityResource {
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
+        }
+        else if(u != null && u.isDisabled())
+        {
+            throw new ForbiddenException();
         }
 
         // Log an error message
