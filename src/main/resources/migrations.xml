@@ -184,7 +184,18 @@
                                  referencedTableName="response"
                                  referencedColumnNames="id"/>
     </changeSet>
-    <changeSet id="6" author="hendersonra">
+    <changeSet id="6" author="koskinasm">
+        <addColumn tableName="user">
+            <column name="admin" type="boolean"/>
+        </addColumn>
+        <update tableName="user">
+            <column name='admin' value='true' />
+            <where>username = 'admin'</where>
+        </update>
+        <rollback>
+        </rollback>
+    </changeSet>
+    <changeSet id="7" author="hendersonra">
         <createTable tableName="bidmanager_session">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints nullable="false" />
@@ -202,16 +213,5 @@
                                  onUpdate="NO ACTION"
                                  referencedTableName="opportunity"
                                  referencedColumnNames="id"/>
-    </changeSet>
-    <changeSet id="6" author="koskinasm">
-        <addColumn tableName="user">
-            <column name="admin" type="boolean"/>
-        </addColumn>
-        <update tableName="user">
-            <column name='admin' value='true' />
-            <where>username = 'admin'</where>
-        </update>
-        <rollback>
-        </rollback>
     </changeSet>
 </databaseChangeLog>
