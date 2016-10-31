@@ -39,13 +39,14 @@ public class EmailServiceTest {
 
     @Test
     public void Success() throws Exception {
+        String responseUrl = "responseUrl";
+        String[] emails = {"test@example.com", "test2@example.com"};
         when(configuration.isEnabled()).thenReturn(true);
         when(validator.isValid(anyString())).thenReturn(true);
-        when(composer.composeAlert(opportunity)).thenReturn(email);
-        String[] emails = {"test@example.com", "test2@example.com"};
+        when(composer.composeBidManagerEmail(opportunity, responseUrl)).thenReturn(email);
         EmailService service = new EmailService(composer, configuration, validator);
 
-        service.sendBidManagerEmail(opportunity, emails);
+        service.sendBidManagerEmail(opportunity, emails, responseUrl);
 
         for (String e : emails) {
             verify(email).addTo(e);
@@ -58,19 +59,20 @@ public class EmailServiceTest {
         String[] emails = {"test@example.com", "test2@example.com"};
         EmailService service = new EmailService(composer, configuration, validator);
 
-        service.sendBidManagerEmail(opportunity, emails);
+        service.sendBidManagerEmail(opportunity, emails, "");
         verify(composer, never()).composeAlert(any(Opportunity.class));
     }
 
     @Test
     public void EmailsTrimmedAndDeDuplicated() throws Exception {
+        String responseUrl = "responseUrl";
+        String[] emails = {"  test@example.com", "test@example.com  ", "test2@example.com"};
         when(validator.isValid(anyString())).thenReturn(true);
         when(configuration.isEnabled()).thenReturn(true);
-        when(composer.composeAlert(opportunity)).thenReturn(email);
-        String[] emails = {"  test@example.com", "test@example.com  ", "test2@example.com"};
+        when(composer.composeBidManagerEmail(opportunity, responseUrl)).thenReturn(email);
         EmailService service = new EmailService(composer, configuration, validator);
 
-        service.sendBidManagerEmail(opportunity, emails);
+        service.sendBidManagerEmail(opportunity, emails, responseUrl);
 
         verify(email, times(2)).addTo(anyString());
     }
@@ -80,7 +82,7 @@ public class EmailServiceTest {
         String[] emails = {"  test@example.com", "test@example.com  ", "test2@example.com"};
         EmailService service = new EmailService(composer, configuration, validator);
 
-        service.sendBidManagerEmail(opportunity, emails);
+        service.sendBidManagerEmail(opportunity, emails, "");
 
         verify(email, never()).send();
     }

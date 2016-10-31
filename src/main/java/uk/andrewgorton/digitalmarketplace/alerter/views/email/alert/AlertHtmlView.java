@@ -1,4 +1,4 @@
-package uk.andrewgorton.digitalmarketplace.alerter.views.email;
+package uk.andrewgorton.digitalmarketplace.alerter.views.email.alert;
 
 import io.dropwizard.views.View;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
