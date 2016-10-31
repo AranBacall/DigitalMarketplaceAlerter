@@ -103,12 +103,13 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 EmailValidator.getInstance());
 
         // Resources
-        environment.jersey().register(new HomepageResource());
+        environment.jersey().register(new HomepageResource(userDAO));
         environment.jersey().register(new OpportunityResource(opportunityDAO,emailService));
         environment.jersey().register(new ReportResource(pieChartDAO));
         environment.jersey().register(new AlertResource(alertDAO));
         environment.jersey().register(new BidManagerResource(managerDAO));
         environment.jersey().register(new SecurityResource(userDAO));
+        environment.jersey().register(new ReportResource(pieChartDAO));
 
         // Pollers
         ScheduledExecutorService ses = environment.lifecycle().scheduledExecutorService("dma-%3d").build();
