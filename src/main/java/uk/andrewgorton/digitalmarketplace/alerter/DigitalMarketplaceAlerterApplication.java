@@ -21,6 +21,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.dao.BidManagerDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.report.PieChartDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
@@ -75,6 +76,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
         final BidManagerDAO managerDAO = jdbi.onDemand(BidManagerDAO.class);
         final UserDAOFactory userDAOFactory = new UserDAOFactory(userDAO);
+        final PieChartDAO pieChartDAO = jdbi.onDemand(PieChartDAO.class);
 
         environment.jersey().register(new AbstractBinder() {
             @Override
@@ -111,6 +113,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new BidManagerResource(managerDAO));
         environment.jersey().register(new SecurityResource(userDAO));
+        environment.jersey().register(new ReportResource(pieChartDAO));
 
         // Pollers
         ScheduledExecutorService ses = environment.lifecycle().scheduledExecutorService("dma-%3d").build();
