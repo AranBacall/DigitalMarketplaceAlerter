@@ -19,7 +19,6 @@ public class Opportunity {
     private int duration;
     private long cost;
     private String OMT;
-    private int response;
 
     public long getId() {
         return id;
@@ -148,13 +147,5 @@ public class Opportunity {
 
     public void setOMT(String OMT) {
         this.OMT = OMT;
-    }
-
-    public int getResponse() {
-        return response;
-    }
-
-    public void setResponse(int response) {
-        this.response = response;
     }
 }

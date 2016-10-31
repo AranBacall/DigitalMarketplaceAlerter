@@ -16,10 +16,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.andrewgorton.digitalmarketplace.alerter.dao.AlertDAO;
-import uk.andrewgorton.digitalmarketplace.alerter.dao.BidManagerDAO;
-import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
-import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.*;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
@@ -71,6 +68,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(environment, configuration.getDatabase(), "h2");
         final OpportunityDAO opportunityDAO = jdbi.onDemand(OpportunityDAO.class);
+        final ResponseDAO responseDAO = jdbi.onDemand(ResponseDAO.class);
         final AlertDAO alertDAO = jdbi.onDemand(AlertDAO.class);
         final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
         final BidManagerDAO managerDAO = jdbi.onDemand(BidManagerDAO.class);
@@ -106,7 +104,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
 
         // Resources
         environment.jersey().register(new HomepageResource(userDAO));
-        environment.jersey().register(new OpportunityResource(opportunityDAO, emailService));
+        environment.jersey().register(new OpportunityResource(opportunityDAO, responseDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new BidManagerResource(managerDAO));

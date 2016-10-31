@@ -6,10 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.ResponseDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.EmailService;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
+import uk.andrewgorton.digitalmarketplace.alerter.exceptions.ForbiddenException;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.DetailView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.ListView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.response.ResponseExitView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.response.ResponseListView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -17,15 +21,20 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.UUID;
 
 @Path("/opportunity")
 public class OpportunityResource {
     private final Logger LOGGER = LoggerFactory.getLogger(OpportunityResource.class);
     private final OpportunityDAO opportunityDAO;
+    private final ResponseDAO responseDAO;
     private final EmailService emailService;
 
-    public OpportunityResource(OpportunityDAO opportunityDAO, EmailService emailService) {
+    public OpportunityResource(OpportunityDAO opportunityDAO,
+                               ResponseDAO responseDAO, EmailService emailService) {
         this.opportunityDAO = opportunityDAO;
+        this.responseDAO = responseDAO;
         this.emailService = emailService;
     }
 
@@ -131,19 +140,46 @@ public class OpportunityResource {
     public Response emailBidManagers(@Context UriInfo uriInfo,
                                      @PathParam("id") long id,
                                      @FormParam("emails") String emailList) {
+        URI opportunityBaseUri = uriInfo.getBaseUriBuilder().path(OpportunityResource.class).build();
         Opportunity opportunity = opportunityDAO.findById(id);
-        if (opportunity != null) {
-            try {
-                emailService.sendBidManagerEmail(opportunity, emailList.split(","));
-            } catch (EmailException e) {
-                LOGGER.error("Failed to send bid manager email", e);
-                return Response.serverError().entity(e.getMessage()).build();
-            }
-        } else {
+        if (opportunity == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        return Response.seeOther(
-                uriInfo.getBaseUriBuilder().path(OpportunityResource.class).build()).build();
+        try {
+            String key = UUID.randomUUID().toString();
+            String responseUrl = String.format("%s/%s/response/%s", opportunityBaseUri,
+                    opportunity.getId(), key);
+            emailService.sendBidManagerEmail(opportunity, emailList.split(","), responseUrl);
+            opportunityDAO.insertKey(id, key);
+            return Response.seeOther(opportunityBaseUri).build();
+        } catch (EmailException e) {
+            LOGGER.error("Failed to send bid manager email", e);
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+    }
+
+    @Path("{id}/response/{key}")
+    @GET
+    @Timed
+    public ResponseListView responseHandling(@PathParam("id") Long opportunityId,
+                                             @PathParam("key") String key) {
+        if (opportunityDAO.findKey(opportunityId, key) == 0) {
+            throw new ForbiddenException();
+        }
+        return new ResponseListView(opportunityId, responseDAO.findAll());
+    }
+
+    @Path("{id}/response/{key}")
+    @POST
+    @Timed
+    public ResponseExitView responseHandling(@PathParam("id") Long opportunityId,
+                                             @PathParam("key") String key,
+                                             @FormParam("response") Long responseId) {
+        if (opportunityDAO.findKey(opportunityId, key) == 0) {
+            throw new ForbiddenException();
+        }
+        responseDAO.link(opportunityId, responseId);
+        return new ResponseExitView();
     }
 }

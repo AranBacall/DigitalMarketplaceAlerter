@@ -57,4 +57,10 @@ public interface OpportunityDAO {
     @SqlUpdate("update opportunity set cost = :cost where id = :id")
     void setOpportunityCost(@Bind("cost") int cost, @Bind("id") long id);
 
+    @SqlUpdate("insert into bidmanager_session (opportunity, key) values (:opportunity, :key)")
+    void insertKey(@Bind("opportunity") Long opportunityId, @Bind("key") String key);
+
+    @SqlQuery("select count(*) from bidmanager_session where opportunity = :opportunity and key = :key")
+    int findKey(@Bind("opportunity") Long opportunityId, @Bind("key") String key);
+
 }
