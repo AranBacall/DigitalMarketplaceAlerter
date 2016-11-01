@@ -61,14 +61,6 @@ tr:hover {
         <th>Closing</th>
         <td>${opportunity.closing?date}</td>
     </tr>
-    <tr>
-        <th>First Seen</th>
-        <td>${opportunity.firstSeen}</td>
-    </tr>
-    <tr>
-        <th>Last Updated</th>
-        <td>${opportunity.lastUpdated}</td>
-    </tr>
     <#if opportunity.duration gt 0>
     <tr>
         <th>Estimated Duration</th>
