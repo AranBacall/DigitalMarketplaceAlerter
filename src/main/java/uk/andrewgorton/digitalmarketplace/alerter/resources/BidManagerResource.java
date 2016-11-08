@@ -56,9 +56,8 @@ public class BidManagerResource {
     @AdminRequired
     public Response create(@FormParam("email") String email,
                            @Context UriInfo uriInfo) {
-        EmailValidator ev = EmailValidator.getInstance();
-        if (!ev.isValid(email)) {
-            throw new RuntimeException("Invalid email");
+        if (!EmailValidator.getInstance().isValid(email)) {
+            throw new IllegalArgumentException(String.format("%s is an invalid email address", email));
         }
 
         bidManagerDAO.insert(email);
