@@ -214,4 +214,9 @@
                                  referencedTableName="opportunity"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="8" author="hendersonra">
+        <addColumn tableName="opportunity">
+            <column name="removed" valueBoolean="false" type="boolean" />
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

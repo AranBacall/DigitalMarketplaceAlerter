@@ -1,8 +1,10 @@
-package uk.andrewgorton.digitalmarketplace.alerter;
+package uk.andrewgorton.digitalmarketplace.alerter.polling;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
+import uk.andrewgorton.digitalmarketplace.alerter.OpportunityFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 
 import java.util.ArrayList;

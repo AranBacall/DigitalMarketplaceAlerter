@@ -1,4 +1,4 @@
-package uk.andrewgorton.digitalmarketplace.alerter;
+package uk.andrewgorton.digitalmarketplace.alerter.polling;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

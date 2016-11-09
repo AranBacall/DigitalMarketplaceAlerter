@@ -23,6 +23,9 @@ import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.UnauthorizedExceptionMapper;
+import uk.andrewgorton.digitalmarketplace.alerter.polling.DigitalMarketplacePoller;
+import uk.andrewgorton.digitalmarketplace.alerter.polling.Fetcher;
+import uk.andrewgorton.digitalmarketplace.alerter.polling.RemovedOpportunityPoller;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
@@ -111,11 +114,13 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(new SecurityResource(userDAO));
 
         // Pollers
+        final Fetcher fetcher = new Fetcher();
+        final OpportunityFactory opportunityFactory = new OpportunityFactory();
         ScheduledExecutorService ses = environment.lifecycle().scheduledExecutorService("dma-%3d").build();
         ses.scheduleWithFixedDelay(
                 new DigitalMarketplacePoller(
-                        new Fetcher(),
-                        new OpportunityFactory(),
+                        fetcher,
+                        opportunityFactory,
                         opportunityDAO),
                 0,
                 30,
@@ -127,5 +132,11 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final OpportunityToAlertMatcher opportunityToAlertMatcher = new OpportunityToAlertMatcher(opportunityDAO, alertDAO, emailAlerter);
         final EmailAlertRunner emailAlertRunner = new EmailAlertRunner(opportunityToAlertMatcher);
         ses.scheduleWithFixedDelay(emailAlertRunner, 0, 60, TimeUnit.SECONDS);
+
+        // Removed Opportunities
+        ses.scheduleWithFixedDelay(new RemovedOpportunityPoller(fetcher, opportunityFactory, opportunityDAO),
+                1,
+                1,
+                TimeUnit.DAYS);
     }
 }
