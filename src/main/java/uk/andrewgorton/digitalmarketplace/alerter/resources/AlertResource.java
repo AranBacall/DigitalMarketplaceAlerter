@@ -87,14 +87,13 @@ public class AlertResource {
     public Response create(@FormParam("email") String email,
                            @FormParam("customerRegex") String customerMatchRegex,
                            @Context UriInfo uriInfo) {
-        EmailValidator ev = EmailValidator.getInstance();
-        if (!ev.isValid(email)) {
-            throw new RuntimeException("Invalid email");
+        if (!EmailValidator.getInstance().isValid(email)) {
+            throw new IllegalArgumentException(String.format("%s is an invalid email address", email));
         }
         try {
             Pattern.compile(customerMatchRegex);
         } catch (PatternSyntaxException pse) {
-            throw new RuntimeException(pse);
+            throw new IllegalArgumentException("Invalid pattern " + customerMatchRegex, pse);
         }
 
         alertDAO.insert(email, customerMatchRegex, true);

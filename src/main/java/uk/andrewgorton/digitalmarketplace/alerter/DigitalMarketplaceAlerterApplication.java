@@ -22,6 +22,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.ForbiddenExceptionMapper;
+import uk.andrewgorton.digitalmarketplace.alerter.mappers.IllegalArgumentExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.UnauthorizedExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.polling.DigitalMarketplacePoller;
 import uk.andrewgorton.digitalmarketplace.alerter.polling.Fetcher;
@@ -95,6 +96,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(AdminRequiredFeature.class);
         environment.jersey().register(ForbiddenExceptionMapper.class);
         environment.jersey().register(UnauthorizedExceptionMapper.class);
+        environment.jersey().register(IllegalArgumentExceptionMapper.class);
 
         // Email
         final EmailConfiguration emailConfiguration = configuration.getEmailConfiguration();
