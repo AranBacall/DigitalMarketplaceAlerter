@@ -27,11 +27,18 @@ public class RemovedOpportunityPoller implements Runnable {
 
     @Override
     public void run() {
-        List<Opportunity> opportunities = opportunityFactory.create(fetcher.run());
-        List<Opportunity> allOpen = opportunityDAO.findAllOpen();
-        allOpen.stream().filter(opp -> !opportunities.contains(opp)).forEach(opp -> {
-            opportunityDAO.setRemoved(true, opp.getId());
-            LOGGER.info("The following opportunity has been removed from the Digital Marketplace: {}", opp.getUrl());
-        });
+        try {
+            List<Opportunity> liveOpportunities = opportunityFactory.create(fetcher.run());
+            LOGGER.info("Fetched {} opportunities from the Digital Marketplace", liveOpportunities.size());
+            List<Opportunity> localOpportunities = opportunityDAO.findAllUnremoved();
+            LOGGER.info("Fetched {} opportunities from the local store", localOpportunities.size());
+            localOpportunities.stream().filter(opp -> !liveOpportunities.contains(opp)).forEach(opp -> {
+                opportunityDAO.setRemoved(true, opp.getId());
+                LOGGER.info("The following opportunity has been removed from the Digital Marketplace: {}",
+                        opp.getUrl());
+            });
+        } catch (Throwable e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }

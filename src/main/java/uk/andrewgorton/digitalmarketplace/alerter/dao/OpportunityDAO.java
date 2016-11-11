@@ -60,6 +60,9 @@ public interface OpportunityDAO {
     @SqlUpdate("update opportunity set removed = :removed where id = :id")
     void setRemoved(@Bind("removed") boolean isRemoved, @Bind("id") long id);
 
+    @SqlQuery("select * from opportunity where removed = false order by published desc")
+    List<Opportunity> findAllUnremoved();
+
     @SqlUpdate("insert into bidmanager_session (opportunity, key) values (:opportunity, :key)")
     void insertKey(@Bind("opportunity") Long opportunityId, @Bind("key") String key);
 

@@ -41,7 +41,7 @@ public class RemovedOpportunityPollerTest {
         Opportunity d = new Opportunity();
 
         when(factory.create(any())).thenReturn(Arrays.asList(c, d));
-        when(dao.findAllOpen()).thenReturn(Arrays.asList(a, b, c, d));
+        when(dao.findAllUnremoved()).thenReturn(Arrays.asList(a, b, c, d));
         RemovedOpportunityPoller poller = new RemovedOpportunityPoller(fetcher, factory, dao);
 
         poller.run();
@@ -59,7 +59,7 @@ public class RemovedOpportunityPollerTest {
 
         List opportunities = Arrays.asList(a, b, c, d);
         when(factory.create(any())).thenReturn(opportunities);
-        when(dao.findAllOpen()).thenReturn(opportunities);
+        when(dao.findAllUnremoved()).thenReturn(opportunities);
         RemovedOpportunityPoller poller = new RemovedOpportunityPoller(fetcher, factory, dao);
 
         poller.run();
