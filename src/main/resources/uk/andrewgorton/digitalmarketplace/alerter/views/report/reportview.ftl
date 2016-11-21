@@ -2,7 +2,7 @@
 <head>
     <#include "../fragments/head.ftl" parse="false">
     <link rel="stylesheet" type="text/css" href="/dma/static/report.css">
-    <title>Opportunity</title>
+    <title>Reports</title>
 </head>
 
 <style>
@@ -16,53 +16,41 @@
   stroke: #fff;
 }
 
+canvas {
+  margin: 20px;
+}
+
 </style>
-
 <body>
-<h1>Reports</h1>
+<h1>Bid Manager Responses</h1>    <a href="../">Home</a>
+<canvas id="myChart" width="200" height="200"></canvas>
+<div id='location_piechart'></div>
+<br />
+<div id='customer_piechart'></div>
 
-<table>
-    <tr>
-        <th>Opportunities per location</th>
-        <th>Opportunities per customer</th>
-    </tr>
-    <tr>
-         <td>
-            <div id='location_piechart'/>
-         </td>
-         <td>
-             <div id='customer_piechart'/>
-         </td>
-    </tr>
-     <tr>
-         <td>
-              <div id='location_table'/>
-         </td>
-         <td>
-              <div id='customer_table'/>
-         </td>
-      </tr>
-</table>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="/dma/static/js/d3pie.min.js"></script>
-<script src="/dma/static/js/piechart.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+
+<script src="/static/js/Chart.bundle.js"></script>
+<script src="/static/js/draw.js"></script>
+
+<script src="/static/js/d3pie.min.js"></script>
+<script src="/static/js/piechart.js"></script>
 
 <script>
-
-$.getJSON('/dma/report/opl', function(data) {
+$.getJSON('/report/opl', function(data) {
     drawPieChart("location_piechart",data);
     drawTable("location_table",data,['label', 'value']);
 });
 
-$.getJSON('/dma/report/opc', function(data) {
+$.getJSON('/report/opc', function(data) {
     drawPieChart("customer_piechart",data);
     drawTable("customer_table",data,['label', 'value']);
 });
 
+$.getJSON('/report/responses', function(data) {
+    drawChart("myChart", "Responses", data);
+});
 </script>
-
-<p><a href="../">Home</a></p>
 </body>
 </html>
