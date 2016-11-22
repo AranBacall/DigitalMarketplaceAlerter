@@ -1,10 +1,10 @@
 server:
   type: simple
-  applicationContextPath: /dma
-  adminContextPath: /dma/admin
+  applicationContextPath: /
+  adminContextPath: /admin
   connector:
     type: http
-    port: 9999
+    port: 8080
   registerDefaultExceptionMappers: false
 
 database:
