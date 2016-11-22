@@ -61,22 +61,18 @@ tr:hover {
         <th>Closing</th>
         <td>${opportunity.closing?date}</td>
     </tr>
-    <tr>
-        <th>First Seen</th>
-        <td>${opportunity.firstSeen}</td>
-    </tr>
-    <tr>
-        <th>Last Updated</th>
-        <td>${opportunity.lastUpdated}</td>
-    </tr>
+    <#if opportunity.duration gt 0>
     <tr>
         <th>Estimated Duration</th>
         <td>${opportunity.duration}</td>
     </tr>
+    </#if>
+    <#if opportunity.cost gt 0>
     <tr>
         <th>Estimated Cost</th>
         <td>${opportunity.cost}</td>
     </tr>
+    </#if>
 </table>
 <p>For changes to your subscription, contact <a href="mailto:${adminEmail}
 ?subject=Digital Markplace Subscription">${adminName}</a>.</p>
