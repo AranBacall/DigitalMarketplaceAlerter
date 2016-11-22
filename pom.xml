@@ -114,7 +114,6 @@
                 <executions>
                     <execution>
                         <id>default-cli</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
