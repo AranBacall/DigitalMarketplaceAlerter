@@ -1,6 +1,8 @@
 package uk.andrewgorton.digitalmarketplace.alerter;
 
 import org.junit.Test;
+import uk.andrewgorton.digitalmarketplace.alerter.polling.DigitalMarketplacePoller;
+import uk.andrewgorton.digitalmarketplace.alerter.polling.Fetcher;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
