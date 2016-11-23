@@ -19,6 +19,7 @@ public class Opportunity {
     private int duration;
     private long cost;
     private String OMT;
+    private boolean isRemoved;
 
     public long getId() {
         return id;
@@ -147,5 +148,13 @@ public class Opportunity {
 
     public void setOMT(String OMT) {
         this.OMT = OMT;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
+
+    public boolean isRemoved() {
+        return isRemoved;
     }
 }
