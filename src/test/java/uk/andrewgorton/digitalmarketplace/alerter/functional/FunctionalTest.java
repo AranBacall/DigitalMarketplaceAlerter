@@ -1,8 +1,15 @@
 package uk.andrewgorton.digitalmarketplace.alerter.functional;
 
 import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.server.SimpleServerFactory;
 import io.dropwizard.testing.junit.DropwizardAppRule;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.glassfish.jersey.client.ClientProperties;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -16,9 +23,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class FunctionalTest {
     @ClassRule
@@ -28,10 +38,19 @@ public class FunctionalTest {
     private static Client client;
 
     @BeforeClass
-    public static void setup() {
+    public static void setup() throws Exception {
         client = new JerseyClientBuilder(RULE.getEnvironment()).build("test client");
         client.property(ClientProperties.CONNECT_TIMEOUT, "10000");
         client.property(ClientProperties.READ_TIMEOUT, "5000");
+
+        DataSourceFactory dsf = RULE.getConfiguration().getDatabase();
+        try (Connection conn = DriverManager.getConnection(dsf.getUrl(), dsf.getUser(), dsf.getPassword())) {
+            new Liquibase("migrations.xml", new ClassLoaderResourceAccessor(),
+                    DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn)))
+                    .update(new Contexts(), new LabelExpression());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Test
