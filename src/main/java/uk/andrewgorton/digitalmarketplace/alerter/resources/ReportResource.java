@@ -53,4 +53,13 @@ public class ReportResource {
     public Object responses() {
         return pieChartDAO.responses();
     }
+
+    @GET
+    @Path("/bids-against-opportunities")
+    @Timed
+    @LoginRequired
+    @Produces("application/json")
+    public Object bidsAgainstOpportunities() {
+        return pieChartDAO.bidsAgainstOpportunities();
+    }
 }

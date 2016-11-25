@@ -23,7 +23,8 @@ canvas {
 </style>
 <body>
 <h1>Bid Manager Responses</h1>    <a href="../">Home</a>
-<canvas id="myChart" width="200" height="200"></canvas>
+<canvas id="responsesChart" width="200" height="200"></canvas>
+<canvas id="bvoChart" width="200" height="200"></canvas>
 <div id='location_piechart'></div>
 <br />
 <div id='customer_piechart'></div>
@@ -49,7 +50,11 @@ $.getJSON('/report/opc', function(data) {
 });
 
 $.getJSON('/report/responses', function(data) {
-    drawChart("myChart", "Responses", data);
+    drawBarChart("responsesChart", "Responses", data);
+});
+
+$.getJSON('/report/bids-against-opportunities', function(data) {
+    drawBarChart("bvoChart", "Bids Vs Opportunities", data);
 });
 </script>
 </body>

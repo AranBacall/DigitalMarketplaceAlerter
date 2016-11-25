@@ -1,4 +1,4 @@
-function drawChart(elementName, chartLabel, json) {
+function drawBarChart(elementName, chartLabel, json) {
     var labels = []
     var values = []
     var colors = []
@@ -22,7 +22,7 @@ function drawChart(elementName, chartLabel, json) {
         ]
     };
 
-    var myLineChart = new Chart(document.getElementById(elementName), {
+    var myChart = new Chart(document.getElementById(elementName), {
         type: 'bar',
         data: data,
         options: {

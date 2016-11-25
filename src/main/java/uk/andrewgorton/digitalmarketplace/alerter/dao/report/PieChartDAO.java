@@ -23,4 +23,10 @@ public interface PieChartDAO {
             "where or.response = r.id " +
             "group by r.response;")
     List<PieChartData> responses();
+
+    @SqlQuery("select 'opportunities' as group_name, count(*) as occurrences from opportunity " +
+            "union all " +
+            "select 'bids' as group_name, count(*) as occurrences from opportunity_response opresp " +
+            "where opresp.response = 1;")
+    List<PieChartData> bidsAgainstOpportunities();
 }
