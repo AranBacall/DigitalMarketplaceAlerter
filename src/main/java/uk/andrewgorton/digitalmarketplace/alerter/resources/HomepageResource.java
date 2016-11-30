@@ -4,10 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.sessions.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
-import uk.andrewgorton.digitalmarketplace.alerter.exceptions.ForbiddenException;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFilter;
 import uk.andrewgorton.digitalmarketplace.alerter.views.HomeView;
 
