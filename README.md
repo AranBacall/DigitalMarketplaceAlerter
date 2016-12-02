@@ -16,8 +16,8 @@ Maven3 and JDK8 is required. A fat jar is produced via Maven Package in the targ
 $ mvn package
 <snip>
 Process finished with exit code 0
-$ ls -sh target/DigitalMarketplaceAlerter-1.0.8.jar
-23M target/DigitalMarketplaceAlerter-1.0.8.jar
+$ ls -sh target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar
+23M target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar
 $
 ```
 
@@ -28,7 +28,7 @@ Copy the ```config/local.yml.sample``` file to ```config/local.yml``` and edit t
 Test the database migrations first.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.8.jar db migrate config/local.yml --dry-run
+$ java -jar target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar db migrate config/local.yml --dry-run
 <snip>
 -- Release Database Lock
 UPDATE PUBLIC.DATABASECHANGELOGLOCK SET LOCKED = FALSE, LOCKEDBY = NULL, LOCKGRANTED = NULL WHERE ID = 1;
@@ -40,7 +40,7 @@ $
 If no errors, then run the migration scripts.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.8.jar db migrate config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar db migrate config/local.yml
 <snip>
 INFO  [2016-09-26 12:15:06,218] liquibase: Successfully released change log lock
 $ 
@@ -49,7 +49,7 @@ $
 If this is the first time running, set the admin password on the database
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.8.jar setuserpassword -u admin -p new_password_here config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar setuserpassword -u admin -p new_password_here config/local.yml
 INFO  [2016-09-26 12:16:02,643] org.eclipse.jetty.util.log: Logging initialized @1224ms
 INFO  [2016-09-26 12:16:02,730] io.dropwizard.assets.AssetsBundle: Registering AssetBundle with name: assets for path /static/*
 Salted password: Y9v3wAX58S0mnew_password_here
@@ -61,7 +61,7 @@ $
 You can also create new users and assign passwords to them by running the following command:
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.8.jar createnewuser -u username -p password config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar createnewuser -u username -p password config/local.yml
 INFO  [2016-10-24 10:48:49,857] org.eclipse.jetty.util.log: Logging initialized @1248ms
 INFO  [2016-10-24 10:48:49,935] io.dropwizard.server.SimpleServerFactory: Registering jersey handler with root path prefix: /dma
 INFO  [2016-10-24 10:48:49,935] io.dropwizard.server.SimpleServerFactory: Registering admin handler with root path prefix: /dma/admin
@@ -75,7 +75,7 @@ A new user with username 'username' and password 'password' has been created!
 Now you can start it.
 
 ```
-$ java -jar target/DigitalMarketplaceAlerter-1.0.8.jar server config/local.yml
+$ java -jar target/DigitalMarketplaceAlerter-1.0.9-SNAPSHOT.jar server config/local.yml
 <snip>
 INFO  [2016-09-26 12:16:57,023] org.eclipse.jetty.server.Server: Started @3241ms
 ```
