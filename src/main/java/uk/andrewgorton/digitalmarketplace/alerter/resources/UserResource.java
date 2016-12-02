@@ -2,11 +2,15 @@ package uk.andrewgorton.digitalmarketplace.alerter.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.sessions.Session;
+import io.dropwizard.views.View;
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.AdminRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.annotations.LoginRequired;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.UserDAO;
+import uk.andrewgorton.digitalmarketplace.alerter.security.ProtectedPassword;
+import uk.andrewgorton.digitalmarketplace.alerter.security.SecurityService;
 import uk.andrewgorton.digitalmarketplace.alerter.views.UserListView;
+import uk.andrewgorton.digitalmarketplace.alerter.views.security.ResetPasswordView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,9 +25,11 @@ import javax.ws.rs.core.UriInfo;
 public class UserResource {
 
     private final UserDAO userDAO;
+    private final SecurityService securityService;
 
-    public UserResource(UserDAO userDAO) {
+    public UserResource(UserDAO userDAO, SecurityService securityService) {
         this.userDAO = userDAO;
+        this.securityService = securityService;
     }
 
     @GET
@@ -99,5 +105,44 @@ public class UserResource {
         {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+    }
+
+    @GET
+    @Path("/{userid}/reset-password/{key}")
+    @Timed
+    public View showResetPasswordView(@PathParam("userid") long userId, @PathParam("key") String key) {
+        User requestedUser = this.userDAO.findByKey(userId, key);
+        if (requestedUser == null) {
+            throw new ForbiddenException(String.format("No user / key combination exists with id %d and key %s",
+                    userId, key));
+        }
+        return new ResetPasswordView();
+    }
+
+    @POST
+    @Path("/{userid}/reset-password/{key}")
+    @Timed
+    public Response resetPassword(@Context UriInfo uriInfo, @PathParam("userid") long userId,
+                                  @PathParam("key") String key,
+                                  @FormParam("password") String barePassword,
+                                  @FormParam("repeatPassword") String repeatPassword) {
+        User requestedUser = this.userDAO.findByKey(userId, key);
+        if (requestedUser == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(
+                    String.format("No user / key combination exists with id %d and key %s", userId, key)).build();
+        }
+
+        if (!barePassword.equals(repeatPassword)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(
+                    String.format("Passwords %s and %s do not match", barePassword, repeatPassword)).build();
+        }
+
+        ProtectedPassword password = this.securityService.protectPassword(barePassword);
+        this.userDAO.updateUserCredentials(requestedUser.getUsername(), password.getSalt(), password.getProtected());
+        return Response.seeOther(uriInfo.getBaseUriBuilder()
+                .path(SecurityResource.class)
+                .path("/login")
+                .build()
+        ).build();
     }
 }

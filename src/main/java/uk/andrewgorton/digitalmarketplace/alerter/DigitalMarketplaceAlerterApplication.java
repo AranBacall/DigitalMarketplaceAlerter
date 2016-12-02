@@ -28,6 +28,7 @@ import uk.andrewgorton.digitalmarketplace.alerter.polling.DigitalMarketplacePoll
 import uk.andrewgorton.digitalmarketplace.alerter.polling.Fetcher;
 import uk.andrewgorton.digitalmarketplace.alerter.polling.RemovedOpportunityPoller;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
+import uk.andrewgorton.digitalmarketplace.alerter.security.SecurityService;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.GetHashedPasswordCommand;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.SetUserPassword;
@@ -41,6 +42,12 @@ import java.util.concurrent.TimeUnit;
 public class DigitalMarketplaceAlerterApplication extends Application<DigitalMarketplaceAlerterConfiguration> {
     private final Logger LOGGER = LoggerFactory.getLogger(DigitalMarketplaceAlerterApplication.class);
 
+    private final SecurityService securityService;
+
+    public DigitalMarketplaceAlerterApplication() {
+        this.securityService = new SecurityService();
+    }
+
     public static void main(String[] args) throws Exception {
         new DigitalMarketplaceAlerterApplication().run(args);
     }
@@ -53,7 +60,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
     @Override
     public void initialize(Bootstrap<DigitalMarketplaceAlerterConfiguration> bootstrap) {
         bootstrap.addCommand(new GetHashedPasswordCommand());
-        bootstrap.addCommand(new SetUserPassword(bootstrap.getApplication()));
+        bootstrap.addCommand(new SetUserPassword(bootstrap.getApplication(), this.securityService));
         bootstrap.addCommand(new CreateNewUser(bootstrap.getApplication()));
 
         bootstrap.addBundle(new MigrationsBundle<DigitalMarketplaceAlerterConfiguration>() {
@@ -111,9 +118,9 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(new HomepageResource(userDAO));
         environment.jersey().register(new OpportunityResource(opportunityDAO, responseDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
-        environment.jersey().register(new UserResource(userDAO));
+        environment.jersey().register(new UserResource(userDAO, this.securityService));
         environment.jersey().register(new BidManagerResource(managerDAO));
-        environment.jersey().register(new SecurityResource(userDAO));
+        environment.jersey().register(new SecurityResource(userDAO, emailService, this.securityService));
 
         // Pollers
         final Fetcher fetcher = new Fetcher();

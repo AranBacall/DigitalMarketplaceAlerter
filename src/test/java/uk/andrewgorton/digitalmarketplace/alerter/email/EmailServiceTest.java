@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
+import uk.andrewgorton.digitalmarketplace.alerter.User;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -85,6 +86,27 @@ public class EmailServiceTest {
         service.sendBidManagerEmail(opportunity, emails, "");
 
         verify(email, never()).send();
+    }
+
+    @Test
+    public void SendPasswordResetEmail() throws Exception {
+        User user = mock(User.class);
+        String responseUrl = "responseUrl";
+        when(configuration.isEnabled()).thenReturn(true);
+        when(validator.isValid(anyString())).thenReturn(true);
+        when(composer.composePasswordResetEmail(user, responseUrl)).thenReturn(email);
+        EmailService service = new EmailService(composer, configuration, validator);
+
+        service.sendPasswordResetEmail(user, responseUrl);
+
+        verify(email).send();
+    }
+
+    @Test(expected = EmailException.class)
+    public void SendPasswordResetEmailEmailConfigNotEnabled() throws Exception {
+        EmailService service = new EmailService(composer, configuration, validator);
+        service.sendPasswordResetEmail(null, null);
+        verify(composer, never()).composePasswordResetEmail(any(User.class), anyString());
     }
 
 }

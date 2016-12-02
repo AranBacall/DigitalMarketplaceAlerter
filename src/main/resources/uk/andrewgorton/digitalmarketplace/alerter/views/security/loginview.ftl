@@ -28,5 +28,6 @@
     <input type="submit" value="Login">
     </form>
 </body>
+<p><a href="/security/forgotten-password">I've forgotten my password</a></p>
 <#if returnLocation??><p><a href="${returnLocation}">Cancel</a></p></#if>
 </html>

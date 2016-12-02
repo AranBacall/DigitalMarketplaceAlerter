@@ -2,12 +2,9 @@ package uk.andrewgorton.digitalmarketplace.alerter.mappers;
 
 import uk.andrewgorton.digitalmarketplace.alerter.exceptions.UnauthorizedException;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.HomepageResource;
-import uk.andrewgorton.digitalmarketplace.alerter.resources.SecurityResource;
-import uk.andrewgorton.digitalmarketplace.alerter.views.exceptions.ForbiddenView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.exceptions.UnauthorizedView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;

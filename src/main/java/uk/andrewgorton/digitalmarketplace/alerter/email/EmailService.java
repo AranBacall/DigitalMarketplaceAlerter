@@ -6,6 +6,8 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
+import uk.andrewgorton.digitalmarketplace.alerter.User;
+import uk.andrewgorton.digitalmarketplace.alerter.resources.UserResource;
 
 import java.util.Arrays;
 
@@ -53,6 +55,25 @@ public class EmailService {
         }
 
         LOGGER.info("Sending email {}", email.getSubject());
+        email.send();
+    }
+
+    /**
+     * Sends an email containing the provided url to the email address of the provided user, allowing them
+     * to reset their password.
+     *
+     * @param user the user to send the password reset email to
+     * @param url the password reset url, construct according to what
+     * {@link UserResource#showResetPasswordView(long, String)} expects
+     * @throws EmailException if the email could not be composed, or if there is no email configuration enabled
+     */
+    public void sendPasswordResetEmail(User user, String url) throws EmailException {
+        if (!configuration.isEnabled()) {
+            throw new EmailException("Email configuration not enabled");
+        }
+
+        HtmlEmail email = composer.composePasswordResetEmail(user, url);
+        LOGGER.info("Sending email {} to {}", email.getSubject(), user.getEmail());
         email.send();
     }
 }
