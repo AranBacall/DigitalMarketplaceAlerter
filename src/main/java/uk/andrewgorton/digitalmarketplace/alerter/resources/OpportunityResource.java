@@ -9,7 +9,6 @@ import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.ResponseDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.EmailService;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
-import uk.andrewgorton.digitalmarketplace.alerter.exceptions.ForbiddenException;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.DetailView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.opportunity.ListView;
 import uk.andrewgorton.digitalmarketplace.alerter.views.response.ResponseExitView;

@@ -18,6 +18,9 @@ public interface UserDAO {
     @SqlQuery("select * from user where username = :username")
     User findByUsername(@Bind("username") String username);
 
+    @SqlQuery("select * from user where email = :email")
+    User findByEmail(@Bind("email") String email);
+
     @SqlQuery("select * from user where id = :id")
     User findById(@Bind("id") Long id);
 
@@ -43,4 +46,10 @@ public interface UserDAO {
     void delete(@Bind("id") Long id);
 
     void close();
+
+    @SqlUpdate("insert into password_change_session (user, key) values (:user, :key)")
+    void insertKey(@Bind("user") Long userId, @Bind("key") String key);
+
+    @SqlQuery("select u.* from password_change_session p, user u where p.user = :user and p.key = :key")
+    User findByKey(@Bind("user") Long userId, @Bind("key") String key);
 }
