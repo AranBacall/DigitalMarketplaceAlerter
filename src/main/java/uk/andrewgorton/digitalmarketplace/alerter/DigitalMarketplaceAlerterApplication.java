@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.*;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.factory.UserDAOFactory;
+import uk.andrewgorton.digitalmarketplace.alerter.dao.report.PieChartDAO;
 import uk.andrewgorton.digitalmarketplace.alerter.email.*;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.AdminRequiredFeature;
 import uk.andrewgorton.digitalmarketplace.alerter.filters.LoginRequiredFeature;
@@ -84,6 +85,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final UserDAO userDAO = jdbi.onDemand(UserDAO.class);
         final BidManagerDAO managerDAO = jdbi.onDemand(BidManagerDAO.class);
         final UserDAOFactory userDAOFactory = new UserDAOFactory(userDAO);
+        final PieChartDAO pieChartDAO = jdbi.onDemand(PieChartDAO.class);
 
         environment.jersey().register(new AbstractBinder() {
             @Override
@@ -121,6 +123,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(new UserResource(userDAO, this.securityService));
         environment.jersey().register(new BidManagerResource(managerDAO));
         environment.jersey().register(new SecurityResource(userDAO, emailService, this.securityService));
+        environment.jersey().register(new ReportResource(pieChartDAO));
 
         // Pollers
         final Fetcher fetcher = new Fetcher();
