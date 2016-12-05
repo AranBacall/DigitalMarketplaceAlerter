@@ -219,4 +219,23 @@
             <column name="removed" valueBoolean="false" type="boolean" />
         </addColumn>
     </changeSet>
+    <changeSet id="9" author="hendersonra">
+        <createTable tableName="password_change_session">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="key" type="varchar(255)" >
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="password_change_session" baseColumnNames="user"
+                                 constraintName="fk_password_change_session_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>
