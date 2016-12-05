@@ -39,8 +39,11 @@ public class SecurityResource {
     @GET
     @Path("/login")
     @Timed
-    public View showLoginForm(@QueryParam("returnLocation") String returnLocation) {
-        return new LoginView(returnLocation);
+    public View showLoginForm(@Context UriInfo uriInfo, @QueryParam("returnLocation") String returnLocation) {
+        return new LoginView(returnLocation, uriInfo.getBaseUriBuilder()
+                .path(SecurityResource.class)
+                .path("/forgotten-password")
+                .build().toString());
     }
 
     @POST
