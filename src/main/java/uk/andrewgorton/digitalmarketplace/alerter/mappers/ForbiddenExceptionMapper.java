@@ -25,7 +25,8 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
                 .entity(
                         new ForbiddenView(
                                 uriInfo.getBaseUriBuilder().path(SecurityResource.class).path("/login").build(),
-                                request.getRequestURI())
+                                request.getRequestURI(),
+                                e.getMessage())
                 ).build();
     }
 }
