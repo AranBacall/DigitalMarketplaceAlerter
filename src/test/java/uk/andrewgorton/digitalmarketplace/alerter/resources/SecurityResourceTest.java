@@ -11,7 +11,6 @@ import uk.andrewgorton.digitalmarketplace.alerter.security.SecurityService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -92,12 +91,6 @@ public class SecurityResourceTest {
         verify(session).setAttribute("username", username);
         verify(session).setAttribute("userid", userId);
         verify(session).setAttribute("authenticated", true);
-    }
-    
-    @Test(expected = ForbiddenException.class)
-    public void HandleLoginEmptyUsername() throws Exception {
-        new SecurityResource(userDAO, null, null)
-                .handleLogin(null, null, null, null, "", null);
     }
 
     @Test

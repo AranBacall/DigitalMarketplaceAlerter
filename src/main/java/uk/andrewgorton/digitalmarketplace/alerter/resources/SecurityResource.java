@@ -55,35 +55,38 @@ public class SecurityResource {
                                 @QueryParam("returnLocation") String returnLocation,
                                 @FormParam("Username") String username,
                                 @FormParam("Password") String password) throws Exception {
-        User user = userDAO.findByUsername(username);
-
-        if (user == null) {
-            throw new ForbiddenException("The username is not recognised");
+        User u = null;
+        if (StringUtils.isNotBlank(username)) {
+            u = this.userDAO.findByUsername(username);
         }
+        if (u != null && !u.isDisabled()) {
+            try {
+                if (this.securityService.verifyPassword(u, password)) {
+                    session.setAttribute("username", u.getUsername());
+                    session.setAttribute("userid", u.getId());
+                    session.setAttribute("authenticated", true);
 
-        if (user.isDisabled()) {
-            throw new ForbiddenException(String.format("User %s has been disabled, please contact your administrator",
-                    user.getUsername()));
+                    if (req.getHeader("X-Forwarded-For") != null) {
+                        LOGGER.info(String.format("Successful login for %s from ip %s (%s)", u.getUsername(),
+                                req.getHeader("X-Forwarded-For"),
+                                req.getRemoteHost()));
+                    } else {
+                        LOGGER.info(String.format("Successful login for %s from ip %s",
+                                u.getUsername(), req.getRemoteHost()));
+                    }
+                    if (StringUtils.isNotBlank(returnLocation)) {
+                        return Response.seeOther(UriBuilder.fromUri(returnLocation).build()).build();
+                    } else {
+                        return Response.seeOther(uriInfo.getBaseUriBuilder().path(HomepageResource.class).build()).build();
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
-
-        if (this.securityService.verifyPassword(user, password)) {
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("userid", user.getId());
-            session.setAttribute("authenticated", true);
-
-            if (req.getHeader("X-Forwarded-For") != null) {
-                LOGGER.info(String.format("Successful login for %s from ip %s (%s)", user.getUsername(),
-                        req.getHeader("X-Forwarded-For"),
-                        req.getRemoteHost()));
-            } else {
-                LOGGER.info(String.format("Successful login for %s from ip %s",
-                        user.getUsername(), req.getRemoteHost()));
-            }
-            if (StringUtils.isNotBlank(returnLocation)) {
-                return Response.seeOther(UriBuilder.fromUri(returnLocation).build()).build();
-            } else {
-                return Response.seeOther(uriInfo.getBaseUriBuilder().path(HomepageResource.class).build()).build();
-            }
+        else if (u != null && u.isDisabled())
+        {
+            throw new ForbiddenException();
         }
 
         // Log an error message

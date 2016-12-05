@@ -37,9 +37,7 @@ public class SecurityServiceTest {
         when(user.getSalt()).thenReturn("salt");
         when(user.getPassword()).thenReturn(password);
         SecurityService securityService = spy(new SecurityService());
-        ProtectedPassword protectedPassword = mock(ProtectedPassword.class);
-        when(protectedPassword.getProtected()).thenReturn(password);
-        doReturn(protectedPassword).when(securityService).protectPassword(guess, salt);
+        doReturn(password).when(securityService).sha256(salt + guess);
 
         boolean result = securityService.verifyPassword(user, guess);
 
