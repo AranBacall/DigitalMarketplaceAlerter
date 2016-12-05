@@ -40,7 +40,7 @@ public class SecurityService {
      * @return <code>true</code> if the passwords match or <code>false</code> if they do not
      */
     public boolean verifyPassword(User user, String guess) {
-        return user.getPassword().compareToIgnoreCase(this.sha256(user.getSalt() + guess)) == 0;
+        return user.getPassword().equalsIgnoreCase(this.sha256(user.getSalt() + guess));
     }
 
     /**
@@ -52,7 +52,8 @@ public class SecurityService {
      */
     public String sha256(String in) {
         try {
-            return Hex.encodeHexString(MessageDigest.getInstance("SHA-256").digest(in.getBytes(StandardCharsets.UTF_8)));
+            return Hex.encodeHexString(MessageDigest.getInstance("SHA-256")
+                    .digest(in.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to hash password", e);
         }
