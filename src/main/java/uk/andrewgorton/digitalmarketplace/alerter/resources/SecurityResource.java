@@ -39,8 +39,11 @@ public class SecurityResource {
     @GET
     @Path("/login")
     @Timed
-    public View showLoginForm(@QueryParam("returnLocation") String returnLocation) {
-        return new LoginView(returnLocation);
+    public View showLoginForm(@Context UriInfo uriInfo, @QueryParam("returnLocation") String returnLocation) {
+        return new LoginView(returnLocation, uriInfo.getBaseUriBuilder()
+                .path(SecurityResource.class)
+                .path("/forgotten-password")
+                .build().toString());
     }
 
     @POST
@@ -52,61 +55,53 @@ public class SecurityResource {
                                 @QueryParam("returnLocation") String returnLocation,
                                 @FormParam("Username") String username,
                                 @FormParam("Password") String password) throws Exception {
-        User user = userDAO.findByUsername(username);
+        User user = this.userDAO.findByUsername(username);
 
         if (user == null) {
-            throw new ForbiddenException("The username is not recognised");
+            throw new ForbiddenException(String.format("User %s not found", username));
         }
 
         if (user.isDisabled()) {
-            throw new ForbiddenException(String.format("User %s has been disabled, please contact your administrator",
-                    user.getUsername()));
+            throw new ForbiddenException(String.format("User %s has been disabled", username));
         }
 
-        if (this.securityService.verifyPassword(user, password)) {
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("userid", user.getId());
-            session.setAttribute("authenticated", true);
-
+        if (!this.securityService.verifyPassword(user, password)) {
+            // Log an error message
+            StringBuilder sb = new StringBuilder();
+            sb.append("Failed login");
+            if (StringUtils.isNotBlank(username)) {
+                sb.append(String.format(" for user '%s'", username));
+            }
             if (req.getHeader("X-Forwarded-For") != null) {
-                LOGGER.info(String.format("Successful login for %s from ip %s (%s)", user.getUsername(),
-                        req.getHeader("X-Forwarded-For"),
-                        req.getRemoteHost()));
+                sb.append(String.format(" from ip %s (%s)", req.getHeader("X-Forwarded-For"), req.getRemoteHost()));
             } else {
-                LOGGER.info(String.format("Successful login for %s from ip %s",
-                        user.getUsername(), req.getRemoteHost()));
+                sb.append(String.format(" from ip %s", req.getRemoteHost()));
             }
-            if (StringUtils.isNotBlank(returnLocation)) {
-                return Response.seeOther(UriBuilder.fromUri(returnLocation).build()).build();
-            } else {
-                return Response.seeOther(uriInfo.getBaseUriBuilder().path(HomepageResource.class).build()).build();
-            }
+            LOGGER.info(sb.toString());
+            session.setAttribute("username", username);
+            session.setAttribute("authenticated", false);
+            Thread.sleep(1000);
+            throw new ForbiddenException("The provided password is incorrect");
         }
 
-        // Log an error message
-        StringBuilder sb = new StringBuilder();
-        sb.append("Failed login");
-        if (StringUtils.isNotBlank(username)) {
-            sb.append(String.format(" for user '%s'", username));
-        }
+        session.setAttribute("username", user.getUsername());
+        session.setAttribute("userid", user.getId());
+        session.setAttribute("authenticated", true);
+
         if (req.getHeader("X-Forwarded-For") != null) {
-            sb.append(String.format(" from ip %s (%s)", req.getHeader("X-Forwarded-For"), req.getRemoteHost()));
+            LOGGER.info(String.format("Successful login for %s from ip %s (%s)", user.getUsername(),
+                    req.getHeader("X-Forwarded-For"),
+                    req.getRemoteHost()));
         } else {
-            sb.append(String.format(" from ip %s", req.getRemoteHost()));
+            LOGGER.info(String.format("Successful login for %s from ip %s",
+                    user.getUsername(), req.getRemoteHost()));
         }
-        LOGGER.info(sb.toString());
 
-        // Sleep to avoid hack attack
-        Thread.sleep(1000);
-        session.setAttribute("username", username);
-        session.setAttribute("authenticated", false);
-        return Response.seeOther(
-                uriInfo.getBaseUriBuilder()
-                        .path(SecurityResource.class)
-                        .path("/login")
-                        .queryParam("returnLocation", returnLocation)
-                        .build()
-        ).build();
+        if (StringUtils.isNotBlank(returnLocation)) {
+            return Response.seeOther(UriBuilder.fromUri(returnLocation).build()).build();
+        } else {
+            return Response.seeOther(uriInfo.getBaseUriBuilder().path(HomepageResource.class).build()).build();
+        }
     }
 
     @GET

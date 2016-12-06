@@ -5,9 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.andrewgorton.digitalmarketplace.alerter.User;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -39,9 +37,7 @@ public class SecurityServiceTest {
         when(user.getSalt()).thenReturn("salt");
         when(user.getPassword()).thenReturn(password);
         SecurityService securityService = spy(new SecurityService());
-        ProtectedPassword protectedPassword = mock(ProtectedPassword.class);
-        when(protectedPassword.getProtected()).thenReturn(password);
-        doReturn(protectedPassword).when(securityService).protectPassword(guess, salt);
+        doReturn(password).when(securityService).sha256(salt + guess);
 
         boolean result = securityService.verifyPassword(user, guess);
 

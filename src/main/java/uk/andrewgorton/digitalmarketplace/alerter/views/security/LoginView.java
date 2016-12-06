@@ -6,17 +6,17 @@ import io.dropwizard.views.View;
 public class LoginView extends View {
     private final String username;
     private final String returnLocation;
+    private String forgottenPasswordLocation;
 
-    public LoginView(String returnLocation) {
-        super("loginview.ftl");
-        this.username = null;
-        this.returnLocation = returnLocation;
+    public LoginView(String returnLocation, String forgottenPasswordLocation) {
+        this(null, returnLocation, forgottenPasswordLocation);
     }
 
-    public LoginView(String username, String returnLocation) {
+    public LoginView(String username, String returnLocation, String forgottenPasswordLocation) {
         super("loginview.ftl");
         this.username = username;
         this.returnLocation = returnLocation;
+        this.forgottenPasswordLocation = forgottenPasswordLocation;
     }
 
     public String getUsername() {
@@ -25,5 +25,9 @@ public class LoginView extends View {
 
     public String getReturnLocation() {
         return returnLocation;
+    }
+
+    public String getForgottenPasswordLocation() {
+        return forgottenPasswordLocation;
     }
 }
