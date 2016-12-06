@@ -29,7 +29,7 @@ git commit
 Create an annotated git tag.
  
  ```
- git tag -a r1.0.9
+ git tag -a r1.0.10
  ```
 
 Clean and build the fat jar.
