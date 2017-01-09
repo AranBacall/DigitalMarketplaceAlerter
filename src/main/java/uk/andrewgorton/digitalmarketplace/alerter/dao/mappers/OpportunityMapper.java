@@ -27,6 +27,7 @@ public class OpportunityMapper implements ResultSetMapper<Opportunity> {
         o.setDuration(resultSet.getInt("duration"));
         o.setCost(resultSet.getInt("cost"));
         o.setOMT(resultSet.getString("OMT"));
+        o.setRemoved(resultSet.getBoolean("removed"));
         return o;
     }
 }
