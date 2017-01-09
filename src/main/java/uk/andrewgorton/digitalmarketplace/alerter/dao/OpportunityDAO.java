@@ -14,9 +14,9 @@ public interface OpportunityDAO {
     long getCountByUrl(@Bind("url") String url);
 
     @SqlBatch("insert into opportunity(title, type, location, customer, published, " +
-            "closing, closed, excerpt, url, firstSeen, lastUpdated, alerted) " +
+            "closing, closed, excerpt, url, firstSeen, lastUpdated, alerted, removed) " +
             "values(:title, :opportunityType, :location, :customer, :published, " +
-            ":closing, :closed, :excerpt, :url, :lastUpdated, :lastUpdated, false)")
+            ":closing, :closed, :excerpt, :url, :lastUpdated, :lastUpdated, false, false)")
     @BatchChunkSize(1000)
     void insert(@BindBean List<Opportunity> opportunities);
 
@@ -60,7 +60,7 @@ public interface OpportunityDAO {
     @SqlUpdate("update opportunity set removed = :removed where id = :id")
     void setRemoved(@Bind("removed") boolean isRemoved, @Bind("id") long id);
 
-    @SqlQuery("select * from opportunity where removed = false order by published desc")
+    @SqlQuery("select * from opportunity where removed = false order by published desc limit 100")
     List<Opportunity> findAllUnremoved();
 
     @SqlUpdate("insert into bidmanager_session (opportunity, key) values (:opportunity, :key)")

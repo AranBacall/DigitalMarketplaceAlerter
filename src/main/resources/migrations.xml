@@ -189,7 +189,7 @@
             <column name="admin" type="boolean"/>
         </addColumn>
         <update tableName="user">
-            <column name='admin' value='true' />
+            <column name='admin' value='true'/>
             <where>username = 'admin'</where>
         </update>
         <rollback>
@@ -198,13 +198,13 @@
     <changeSet id="7" author="hendersonra">
         <createTable tableName="bidmanager_session">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
-            <column name="key" type="varchar(255)" >
-                <constraints nullable="false" />
+            <column name="key" type="varchar(255)">
+                <constraints nullable="false"/>
             </column>
             <column name="opportunity" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="bidmanager_session" baseColumnNames="opportunity"
@@ -216,19 +216,19 @@
     </changeSet>
     <changeSet id="8" author="hendersonra">
         <addColumn tableName="opportunity">
-            <column name="removed" valueBoolean="false" type="boolean" />
+            <column name="removed" valueBoolean="false" type="boolean"/>
         </addColumn>
     </changeSet>
     <changeSet id="9" author="hendersonra">
         <createTable tableName="password_change_session">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
-            <column name="key" type="varchar(255)" >
-                <constraints nullable="false" />
+            <column name="key" type="varchar(255)">
+                <constraints nullable="false"/>
             </column>
             <column name="user" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="password_change_session" baseColumnNames="user"
@@ -237,5 +237,11 @@
                                  onUpdate="NO ACTION"
                                  referencedTableName="user"
                                  referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="10" author="andrewg">
+        <addNotNullConstraint tableName="opportunity"
+                              columnName="removed"
+                              columnDataType="boolean"
+                              defaultNullValue="false"/>
     </changeSet>
 </databaseChangeLog>
