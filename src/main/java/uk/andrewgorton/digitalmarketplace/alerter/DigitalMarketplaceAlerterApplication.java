@@ -147,8 +147,8 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
 
         // Removed Opportunities
         ses.scheduleWithFixedDelay(new RemovedOpportunityPoller(fetcher, opportunityFactory, opportunityDAO),
-                1,
-                1,
-                TimeUnit.DAYS);
+                10, // Wait for 10 minutes for initial poll to happen
+                60*24, // Every day
+                TimeUnit.MINUTES);
     }
 }
