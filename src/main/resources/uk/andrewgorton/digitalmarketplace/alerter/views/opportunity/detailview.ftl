@@ -4,7 +4,7 @@
     <title>Opportunity</title>
 </head>
 <body>
-<#if opportunity.removed??>
+<#if opportunity.removed>
 <h1 style="color:red;">This opportunity has been removed from the Digital Marketplace</h1>
 </#if>
 <h1>${opportunity.title}</h1>
