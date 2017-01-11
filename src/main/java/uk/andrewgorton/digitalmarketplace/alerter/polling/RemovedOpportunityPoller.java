@@ -1,9 +1,10 @@
 package uk.andrewgorton.digitalmarketplace.alerter.polling;
 
+import org.eclipse.jetty.http.HttpStatus;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
-import uk.andrewgorton.digitalmarketplace.alerter.OpportunityFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 
 import java.util.List;
@@ -13,29 +14,29 @@ import java.util.List;
  */
 public class RemovedOpportunityPoller implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemovedOpportunityPoller.class);
-
-    private final Fetcher fetcher;
-    private final OpportunityFactory opportunityFactory;
     private final OpportunityDAO opportunityDAO;
 
 
-    public RemovedOpportunityPoller(Fetcher fetcher, OpportunityFactory opportunityFactory, OpportunityDAO opportunityDAO) {
-        this.fetcher = fetcher;
-        this.opportunityFactory = opportunityFactory;
+    public RemovedOpportunityPoller(OpportunityDAO opportunityDAO) {
         this.opportunityDAO = opportunityDAO;
     }
 
     @Override
     public void run() {
         try {
-            List<Opportunity> liveOpportunities = opportunityFactory.create(fetcher.run());
-            LOGGER.info("Fetched {} opportunities from the Digital Marketplace", liveOpportunities.size());
             List<Opportunity> localOpportunities = opportunityDAO.findAllUnremoved();
-            LOGGER.info("Fetched {} opportunities from the local store", localOpportunities.size());
-            localOpportunities.stream().filter(opp -> !liveOpportunities.contains(opp)).forEach(opp -> {
-                opportunityDAO.setRemoved(true, opp.getId());
-                LOGGER.info("The following opportunity has been removed from the Digital Marketplace: {}",
-                        opp.getUrl());
+            LOGGER.debug(String.format("Retrieved '%d' active opportunities from db", localOpportunities.size()));
+
+            localOpportunities.forEach(opp -> {
+                try {
+                    int responseCode = Jsoup.connect(opp.getUrl()).execute().statusCode();
+                    if (responseCode == HttpStatus.NOT_FOUND_404) {
+                        opportunityDAO.setRemoved(true, opp.getId());
+                        LOGGER.debug(String.format("Opportunity '%s' (%d) marked as removed", opp.getTitle(), opp.getId()));
+                    }
+                } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
             });
         } catch (Throwable e) {
             LOGGER.error(e.getMessage(), e);
