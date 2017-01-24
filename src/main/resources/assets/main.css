@@ -50,3 +50,7 @@ span.detailslink {
     vertical-align: super;
     font-size: smaller;
 }
+
+span.opportunityremoved {
+    text-decoration: line-through;
+}

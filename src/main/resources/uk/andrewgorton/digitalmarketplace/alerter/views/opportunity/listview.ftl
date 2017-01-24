@@ -18,7 +18,11 @@
     </tr>
     <#list opportunities as opportunity>
     <tr>
+        <#if opportunity.removed>
+        <td><a href="${opportunity.url}" target="_new"><span class="opportunityremoved">${opportunity.title}</a></span> <span class="detailslink">[<a href="${opportunity.id}/">more</a>]</span></td>
+        <#else>
         <td><a href="${opportunity.url}" target="_new">${opportunity.title}</a> <span class="detailslink">[<a href="${opportunity.id}/">more</a>]</span></td>
+        </#if>
         <td>${opportunity.opportunityType}</td>
         <td>${opportunity.customer}</td>
         <td>${opportunity.location}</td>
