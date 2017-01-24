@@ -29,7 +29,10 @@ public class RemovedOpportunityPoller implements Runnable {
 
             localOpportunities.forEach(opp -> {
                 try {
-                    int responseCode = Jsoup.connect(opp.getUrl()).execute().statusCode();
+                    int responseCode = Jsoup.connect(opp.getUrl())
+                            .ignoreHttpErrors(true)
+                            .execute()
+                            .statusCode();
                     if (responseCode == HttpStatus.NOT_FOUND_404) {
                         opportunityDAO.setRemoved(true, opp.getId());
                         LOGGER.debug(String.format("Opportunity '%s' (%d) marked as removed", opp.getTitle(), opp.getId()));
