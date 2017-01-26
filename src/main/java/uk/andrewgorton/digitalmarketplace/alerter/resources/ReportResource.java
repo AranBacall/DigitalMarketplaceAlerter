@@ -86,8 +86,42 @@ public class ReportResource {
     @LoginRequired
     @Produces("application/json")
     public Object getOpportunitiesPerCustomer(@Context HttpServletRequest request) {
-        List<KeyValueColorItem> allItems = reportingDAO.findOpportunitiesPerCustomer();
-        return consolidateCustomers(allItems);
+        List<KeyValueColorItem> allItems = aggregateOpportunities(consolidateCustomers(reportingDAO.findOpportunitiesPerCustomer()));
+        allItems.sort(new Comparator<KeyValueColorItem>() {
+            @Override
+            public int compare(KeyValueColorItem o1, KeyValueColorItem o2) {
+                if (o1.getValue() < o2.getValue()) {
+                    return 1;
+                } else if (o1.getValue() > o2.getValue()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        return allItems;
+    }
+
+    private List<KeyValueColorItem> aggregateOpportunities(List<KeyValueColorItem> allItems) {
+        // Total number of opportunities
+        AtomicLong total = new AtomicLong();
+        allItems.forEach(e -> total.addAndGet(e.getValue()));
+
+        // Find the number of opportunities which breach the 25% threshold
+        AtomicLong thresholdNumber = new AtomicLong();
+        AtomicLong aggregatedOpportunities = new AtomicLong();
+        while (((float) aggregatedOpportunities.get() / (float) total.get()) < 0.15) {
+            AtomicLong currentThresholdOpportunityCount = new AtomicLong();
+            allItems.stream()
+                    .filter(e -> e.getValue() == thresholdNumber.get())
+                    .forEach(e -> currentThresholdOpportunityCount.addAndGet(e.getValue()));
+
+            allItems.removeIf(e -> e.getValue() == thresholdNumber.get());
+
+            aggregatedOpportunities.addAndGet(currentThresholdOpportunityCount.get());
+            thresholdNumber.incrementAndGet();
+        }
+        allItems.add(new KeyValueColorItem("Other", aggregatedOpportunities.get()));
+        return allItems;
     }
 
     private List<KeyValueColorItem> consolidateCustomers(List<KeyValueColorItem> allItems) {
@@ -115,17 +149,7 @@ public class ReportResource {
         consolidatedCustomers.entrySet().forEach(singleItem -> {
             result.add(new KeyValueColorItem(singleItem.getKey(), singleItem.getValue().longValue()));
         });
-        result.sort(new Comparator<KeyValueColorItem>() {
-            @Override
-            public int compare(KeyValueColorItem o1, KeyValueColorItem o2) {
-                if (o1.getValue() < o2.getValue()) {
-                    return 1;
-                } else if (o1.getValue() > o2.getValue()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
+
         return result;
     }
 
