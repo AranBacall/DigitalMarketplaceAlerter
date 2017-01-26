@@ -46,7 +46,7 @@ INFO  [2016-09-26 12:15:06,218] liquibase: Successfully released change log lock
 $ 
 ```
 
-If this is the first time running, set the admin password on the database
+Before running for the first time, you should set the password for the admin user.
 
 ```
 $ java -jar target/DigitalMarketplaceAlerter-1.0.12-SNAPSHOT.jar setuserpassword -u admin -p new_password_here config/local.yml
