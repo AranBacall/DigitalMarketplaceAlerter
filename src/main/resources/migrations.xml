@@ -244,4 +244,10 @@
                               columnDataType="boolean"
                               defaultNullValue="false"/>
     </changeSet>
+
+    <changeSet id="11" author="andrewg">
+        <update tableName="opportunity">
+            <column name="removed" type="boolean" value="false"/>
+        </update>
+    </changeSet>
 </databaseChangeLog>

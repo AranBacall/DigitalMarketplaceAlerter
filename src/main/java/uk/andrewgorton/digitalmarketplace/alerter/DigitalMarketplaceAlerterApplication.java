@@ -86,6 +86,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final BidManagerDAO managerDAO = jdbi.onDemand(BidManagerDAO.class);
         final UserDAOFactory userDAOFactory = new UserDAOFactory(userDAO);
         final PieChartDAO pieChartDAO = jdbi.onDemand(PieChartDAO.class);
+        final int pollPeriodMinutes = 30;
 
         environment.jersey().register(new AbstractBinder() {
             @Override
@@ -125,7 +126,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         environment.jersey().register(new SecurityResource(userDAO, emailService, this.securityService));
         environment.jersey().register(new ReportResource(pieChartDAO));
 
-        // Pollers
+        // Opportunity polling
         final Fetcher fetcher = new Fetcher();
         final OpportunityFactory opportunityFactory = new OpportunityFactory();
         ScheduledExecutorService ses = environment.lifecycle().scheduledExecutorService("dma-%3d").build();
@@ -135,7 +136,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                         opportunityFactory,
                         opportunityDAO),
                 0,
-                30,
+                pollPeriodMinutes,
                 TimeUnit.MINUTES);
 
         // Email Alerting
@@ -145,10 +146,10 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final EmailAlertRunner emailAlertRunner = new EmailAlertRunner(opportunityToAlertMatcher);
         ses.scheduleWithFixedDelay(emailAlertRunner, 0, 60, TimeUnit.SECONDS);
 
-        // Removed Opportunities
-        ses.scheduleWithFixedDelay(new RemovedOpportunityPoller(opportunityDAO),
-                1, // Wait for 10 minutes for initial poll to happen
-                60 * 24, // Every day
+        // Detecting removed opportunities
+        ses.scheduleWithFixedDelay(new RemovedOpportunityPoller(opportunityDAO, pollPeriodMinutes * 4),
+                pollPeriodMinutes, // Wait for an initial poll period to have elapsed
+                60 * 24, // Repeat every day
                 TimeUnit.MINUTES);
     }
 }

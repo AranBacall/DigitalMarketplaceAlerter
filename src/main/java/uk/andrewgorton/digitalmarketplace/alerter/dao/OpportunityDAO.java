@@ -6,6 +6,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.mappers.OpportunityMapper;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RegisterMapper(OpportunityMapper.class)
@@ -60,8 +61,8 @@ public interface OpportunityDAO {
     @SqlUpdate("update opportunity set removed = :removed where id = :id")
     void setRemoved(@Bind("removed") boolean isRemoved, @Bind("id") long id);
 
-    @SqlQuery("select * from opportunity where removed = false order by published desc limit 100")
-    List<Opportunity> findAllUnremoved();
+    @SqlQuery("select * from opportunity where closed = false and removed = false and lastUpdated < :notUpdatedSince limit 100")
+    List<Opportunity> findAllNotUpdatedSince(@Bind("notUpdatedSince") Timestamp notUpdatedSince);
 
     @SqlUpdate("insert into bidmanager_session (opportunity, key) values (:opportunity, :key)")
     void insertKey(@Bind("opportunity") Long opportunityId, @Bind("key") String key);
