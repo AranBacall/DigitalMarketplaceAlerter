@@ -17,7 +17,7 @@ public class DigitalMarketplacePollerTest {
     public void FormattedExceptionDisplaysCorrectly() {
         Fetcher fetcher = mock(Fetcher.class);
         doThrow(new RuntimeException("error message")).when(fetcher).run();
-        DigitalMarketplacePoller poller = new DigitalMarketplacePoller(fetcher, null, null);
+        DigitalMarketplacePoller poller = new DigitalMarketplacePoller(fetcher, null, null, 4);
         poller.run();
     }
 
