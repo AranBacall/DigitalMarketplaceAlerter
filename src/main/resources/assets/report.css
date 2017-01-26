@@ -2,7 +2,20 @@ table {
     width: 100%;
 }
 
-td{
-     width:1%;
-     white-space:nowrap;
+td {
+     width: 1%;
+     white-space: nowrap;
+}
+
+.arc text {
+    font: 10px sans-serif;
+    text-anchor: middle;
+}
+
+.arc path {
+    stroke: #fff;
+}
+
+canvas {
+    margin: 20px;
 }

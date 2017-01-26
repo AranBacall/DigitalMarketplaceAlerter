@@ -4,23 +4,6 @@
     <link rel="stylesheet" type="text/css" href="/dma/static/report.css">
     <title>Reports</title>
 </head>
-
-<style>
-
-.arc text {
-  font: 10px sans-serif;
-  text-anchor: middle;
-}
-
-.arc path {
-  stroke: #fff;
-}
-
-canvas {
-  margin: 20px;
-}
-
-</style>
 <body>
 <h1>Bid Manager Responses</h1>    <a href="../">Home</a>
 <canvas id="responsesChart" width="200" height="200"></canvas>
@@ -39,21 +22,21 @@ canvas {
 <script src="/static/js/piechart.js"></script>
 
 <script>
-$.getJSON('/report/opl', function(data) {
+$.getJSON('/dma/report/opl', function(data) {
     drawPieChart("location_piechart",data);
     drawTable("location_table",data,['label', 'value']);
 });
 
-$.getJSON('/report/opc', function(data) {
+$.getJSON('/dma/report/opc', function(data) {
     drawPieChart("customer_piechart",data);
     drawTable("customer_table",data,['label', 'value']);
 });
 
-$.getJSON('/report/responses', function(data) {
+$.getJSON('/dma/report/responses', function(data) {
     drawBarChart("responsesChart", "Responses", data);
 });
 
-$.getJSON('/report/bids-against-opportunities', function(data) {
+$.getJSON('/dma/report/bids-against-opportunities', function(data) {
     drawBarChart("bvoChart", "Bids Vs Opportunities", data);
 });
 </script>

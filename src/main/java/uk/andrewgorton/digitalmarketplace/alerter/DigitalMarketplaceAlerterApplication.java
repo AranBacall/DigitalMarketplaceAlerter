@@ -27,7 +27,6 @@ import uk.andrewgorton.digitalmarketplace.alerter.mappers.IllegalArgumentExcepti
 import uk.andrewgorton.digitalmarketplace.alerter.mappers.UnauthorizedExceptionMapper;
 import uk.andrewgorton.digitalmarketplace.alerter.polling.DigitalMarketplacePoller;
 import uk.andrewgorton.digitalmarketplace.alerter.polling.Fetcher;
-import uk.andrewgorton.digitalmarketplace.alerter.polling.RemovedOpportunityPoller;
 import uk.andrewgorton.digitalmarketplace.alerter.resources.*;
 import uk.andrewgorton.digitalmarketplace.alerter.security.SecurityService;
 import uk.andrewgorton.digitalmarketplace.alerter.tasks.CreateNewUser;
@@ -134,7 +133,8 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
                 new DigitalMarketplacePoller(
                         fetcher,
                         opportunityFactory,
-                        opportunityDAO),
+                        opportunityDAO,
+                        pollPeriodMinutes * 4),
                 0,
                 pollPeriodMinutes,
                 TimeUnit.MINUTES);
@@ -145,11 +145,5 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
         final OpportunityToAlertMatcher opportunityToAlertMatcher = new OpportunityToAlertMatcher(opportunityDAO, alertDAO, emailAlerter);
         final EmailAlertRunner emailAlertRunner = new EmailAlertRunner(opportunityToAlertMatcher);
         ses.scheduleWithFixedDelay(emailAlertRunner, 0, 60, TimeUnit.SECONDS);
-
-        // Detecting removed opportunities
-        ses.scheduleWithFixedDelay(new RemovedOpportunityPoller(opportunityDAO, pollPeriodMinutes * 4),
-                pollPeriodMinutes, // Wait for an initial poll period to have elapsed
-                60 * 24, // Repeat every day
-                TimeUnit.MINUTES);
     }
 }
