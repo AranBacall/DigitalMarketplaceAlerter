@@ -1,12 +1,14 @@
 package uk.andrewgorton.digitalmarketplace.alerter.polling;
 
 import org.eclipse.jetty.http.HttpStatus;
+import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.andrewgorton.digitalmarketplace.alerter.Opportunity;
 import uk.andrewgorton.digitalmarketplace.alerter.dao.OpportunityDAO;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -15,19 +17,21 @@ import java.util.List;
 public class RemovedOpportunityPoller implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemovedOpportunityPoller.class);
     private final OpportunityDAO opportunityDAO;
+    private final int notUpdatedThresholdMinutes;
 
 
-    public RemovedOpportunityPoller(OpportunityDAO opportunityDAO) {
+    public RemovedOpportunityPoller(OpportunityDAO opportunityDAO, int notUpdatedThresholdMinutes) {
         this.opportunityDAO = opportunityDAO;
+        this.notUpdatedThresholdMinutes = notUpdatedThresholdMinutes;
     }
 
     @Override
     public void run() {
-        try {
-            List<Opportunity> localOpportunities = opportunityDAO.findAllUnremoved();
-            LOGGER.debug(String.format("Retrieved '%d' active opportunities from db", localOpportunities.size()));
+        DateTime notUpdatedThreshold = new DateTime().minusMinutes(notUpdatedThresholdMinutes);
 
-            localOpportunities.forEach(opp -> {
+        try {
+            List<Opportunity> notUpdatedOpportunities = opportunityDAO.findAllNotUpdatedSince(new Timestamp(notUpdatedThreshold.getMillis()));
+            notUpdatedOpportunities.forEach(opp -> {
                 try {
                     int responseCode = Jsoup.connect(opp.getUrl())
                             .ignoreHttpErrors(true)
