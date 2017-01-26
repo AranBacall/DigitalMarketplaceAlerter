@@ -15,11 +15,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
 
-<script src="/static/js/Chart.bundle.js"></script>
-<script src="/static/js/draw.js"></script>
+<script src="/dma/static/js/Chart.bundle.js"></script>
+<script src="/dma/static/js/draw.js"></script>
 
-<script src="/static/js/d3pie.min.js"></script>
-<script src="/static/js/piechart.js"></script>
+<script src="/dma/static/js/d3pie.min.js"></script>
+<script src="/dma/static/js/piechart.js"></script>
 
 <script>
 $.getJSON('/dma/report/opl', function(data) {
