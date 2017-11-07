@@ -1,7 +1,5 @@
 # Digital Marketplace Alerter
 
-[![Build Status](https://travis-ci.org/cgi-digital/DigitalMarketplaceAlerter.svg?branch=master)](https://travis-ci.org/cgi-digital/DigitalMarketplaceAlerter)
-
 ## So what is it?
 
 The [UK Government](https://www.gov.uk) advertises packages of work on the [Digital Marketplace](https://www.digitalmarketplace.service.gov.uk/digital-outcomes-and-specialists/opportunities) website.
