@@ -118,6 +118,7 @@ public class DigitalMarketplaceAlerterApplication extends Application<DigitalMar
 
         // Resources
         environment.jersey().register(new HomepageResource(userDAO));
+        environment.jersey().register(new SubscriptionResource());
         environment.jersey().register(new OpportunityResource(opportunityDAO, responseDAO, emailService));
         environment.jersey().register(new AlertResource(alertDAO));
         environment.jersey().register(new UserResource(userDAO, this.securityService));
